@@ -23,7 +23,16 @@ jobs:
           node-version: lts/*
           cache: npm
       - run: npm ci
-      - run: npm run build
+      - name: Build
+        run: |
+          set +e
+          npm run build > build.log 2>&1
+          code=$?
+          cat build.log
+          if [ $code -ne 0 ]; then
+            echo "::error title=Build failed::$(tail -n 30 build.log | sed 's/%/%25/g' | awk 'BEGIN{ORS="%0A"}1')"
+          fi
+          exit $code
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
