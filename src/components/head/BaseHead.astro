@@ -1,6 +1,5 @@
 ---
 import settings from '../../config/settings.js';
-import ThemeProvider from '../theme-switcher/ThemeProvider.astro';
 
 import '../../styles/index.css';
 
@@ -42,8 +41,6 @@ const image = new URL(Astro.props.image || `${import.meta.env.BASE_URL}/social.p
 <meta property="twitter:description" content={description} />
 <meta property="twitter:image" content={image} />
 
-<!-- For Demonstration of the themes -->
-{settings.enableThemeSwitcher && <ThemeProvider />}
 
 <!-- Google Analytics -->
 <script>
