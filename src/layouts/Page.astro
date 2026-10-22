@@ -6,6 +6,8 @@ import Logo from '../components/Logo.astro';
 import settings from '../config/settings';
 import { footerLists, footerSocials } from '../config/footer';
 
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
 
 export interface Props {
 	seo?: BaseHeadProps;
@@ -21,7 +23,7 @@ const { seo } = Astro.props as Props;
 		<span slot="logo">
 			<Logo />
 		</span>
-		<Button slot="action-item" href="/theme/get-started">Get Started</Button>
+		<Button slot="action-item" href={`${base}/#contact`}>Book a lesson</Button>
 	</Header>
 	<div id="page">
 		<slot />

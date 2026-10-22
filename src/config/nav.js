@@ -1,18 +1,7 @@
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
 export const nav = [
-	{
-		title: 'Home',
-		slug: '/',
-	},
-	{
-		title: 'Blog',
-		slug: '/blog',
-	},
-	{
-		title: 'About',
-		slug: '/company/about',
-	},
-	{
-		title: 'Contact',
-		slug: '/company/contact',
-	},
+	{ title: 'Packages', slug: `${base}/#packages` },
+	{ title: 'How it works', slug: `${base}/#how-it-works` },
+	{ title: 'Contact', slug: `${base}/#contact` },
 ];

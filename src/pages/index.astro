@@ -1,91 +1,194 @@
 ---
-import { Container, FeatureCard } from '@components/odyssey-theme';
-
+import { Icon } from 'astro-icon/components';
+import { Container, Button, FeatureCard, CtaCardSection, TextSection } from '@components/odyssey-theme';
 import Layout from '../layouts/Page.astro';
-import HomeHeroSection from '../components/sections/heros/HomeHeroSection.astro';
+import settings from '../config/settings.js';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const waLink = `https://wa.me/${settings.whatsapp}?text=${encodeURIComponent(
+	"Hi! I'd like to book an English lesson."
+)}`;
+const mailLink = `mailto:${settings.email}?subject=${encodeURIComponent(
+	'English lessons'
+)}`;
+
+const packages = [
+	{
+		name: 'Single lesson',
+		price: 'R$80',
+		unit: 'per hour',
+		text: 'Try one hour with no commitment. A good way to meet, set a baseline and decide how to continue.',
+	},
+	{
+		name: 'Lesson package',
+		price: 'R$80',
+		unit: 'per hour',
+		text: 'A block of hours with a steady weekly rhythm, so you build momentum and keep it.',
+	},
+	{
+		name: 'Custom package',
+		price: 'Tailored',
+		unit: 'built around you',
+		text: 'Job interviews, travel, exams, conversation or business English. Content and schedule designed for your goal.',
+	},
+];
+
+const steps = [
+	{ n: '1', title: 'Tell me your goal', text: 'Message me on WhatsApp or email with what you want to use English for.' },
+	{ n: '2', title: 'We build your plan', text: 'We agree on a package, schedule and focus areas that fit your needs.' },
+	{ n: '3', title: 'Learn and practice', text: 'One-on-one online lessons with practical material, feedback and steady progress.' },
+];
 ---
 
 <Layout>
-	<HomeHeroSection />
 	<Container>
-		<section class="feature-card__section">
-			<h2>Landing Pages</h2>
-			<p>
-				Use one of our landing pages to jumpstart your website or
-				ad campaign.
-			</p>
-			<div class="feature-card__grid">
-				<FeatureCard href="/landing-pages/landing-1" title="Landing Page 1" imgSrc="/assets/images/home/screenshots/landing-1">
-				</FeatureCard>
-				<FeatureCard href="/landing-pages/landing-2" title="Landing Page 2" imgSrc="/assets/images/home/screenshots/landing-2">
-				</FeatureCard>
+		<section class="hero">
+			<div class="hero__text">
+				<h1>English lessons built around you</h1>
+				<p>
+					One-on-one ESL tutoring with lesson packages designed for your
+					goals, schedule and level. R$80 per hour.
+				</p>
+				<div class="hero__btns">
+					<Button href={waLink} newTab customIcon>
+						Message on WhatsApp
+						<Fragment slot="icon"><Icon name="ic:baseline-chevron-right" /></Fragment>
+					</Button>
+					<Button href={mailLink} unelevated>Send an email</Button>
+				</div>
+			</div>
+			<div class="hero__image">
+				<picture>
+					<img src={`${base}/assets/images/home/classic-hero.jpg`} alt="" />
+				</picture>
 			</div>
 		</section>
 	</Container>
 
 	<Container>
-		<section class="feature-card__section">
-			<h2>Company Pages</h2>
-			<p>
-				Use one of our prebuilt company pages for your about page, contact page,
-				legal pages, blog posts, etc.
-			</p>
-			<div class="feature-card__grid">
-				<FeatureCard href="/company/about" title="About Page" imgSrc="/assets/images/home/screenshots/about">
-				</FeatureCard>
-				<FeatureCard href="/company/contact" title="Contact Page" imgSrc="/assets/images/home/screenshots/contact">
-				</FeatureCard>
-				<FeatureCard href="/blog/" title="Blog Page" imgSrc="/assets/images/home/screenshots/blog">
-				</FeatureCard>
-				<FeatureCard
-					href="/blog/posts/remote-work-mental-health"
-					title="Blog Post"
-          imgSrc="/assets/images/home/screenshots/blog-post"
-				>
-				</FeatureCard>
-				<FeatureCard
-					href="/company/legal"
-					imgSrc="/assets/images/home/screenshots/legal"
-					title="Legal Page"
-				>
-				</FeatureCard>
+		<section id="packages" class="section">
+			<h2>Lesson packages</h2>
+			<p>Every student is different, so every package can be adjusted.</p>
+			<div class="grid">
+				{packages.map((p) => (
+					<article class="card">
+						<h3>{p.name}</h3>
+						<p class="price">{p.price} <span>{p.unit}</span></p>
+						<p>{p.text}</p>
+					</article>
+				))}
 			</div>
 		</section>
 	</Container>
 
 	<Container>
-		<section class="feature-card__section">
-			<h2>Theme Pages</h2>
-			<p>Learn more about how to set up and use the Odyssey Theme.</p>
-			<div class="feature-card__grid">
-				<FeatureCard
-					href="/theme/get-started"
-					imgSrc="/assets/images/home/screenshots/get-started"
-					title="Get Started"
-				>
-				</FeatureCard>
-				<FeatureCard
-					href="/theme/style-guide"
-					imgSrc="/assets/images/home/screenshots/style-guide"
-					title="Style Guide"
-				>
-				</FeatureCard>
+		<section id="how-it-works" class="section">
+			<h2>How it works</h2>
+			<div class="grid">
+				{steps.map((s) => (
+					<article class="step">
+						<span class="step__n">{s.n}</span>
+						<h3>{s.title}</h3>
+						<p>{s.text}</p>
+					</article>
+				))}
 			</div>
 		</section>
 	</Container>
+
+	<div id="contact">
+		<CtaCardSection background="var(--theme-surface-2)" color="var(--theme-on-surface-2)">
+			<h2>Ready to start?</h2>
+			<p>Tell me what you want to achieve and I will suggest a plan.</p>
+			<div class="hero__btns cta__btns">
+				<Button href={waLink} newTab>WhatsApp: {settings.whatsappDisplay}</Button>
+				<Button href={mailLink} outlined>{settings.email}</Button>
+			</div>
+		</CtaCardSection>
+	</div>
 </Layout>
 
 <style>
-	.feature-card__section {
+	.hero {
 		margin: var(--section-margin) auto;
-	}
-	.feature-card__grid {
+		min-height: clamp(70vh, 70vw, calc(100vh - var(--navbar-height)));
 		display: grid;
-		grid-template-columns: repeat(2, 1fr);
+		grid-template-columns: 1fr 1fr;
+		align-items: center;
+		gap: 1rem;
+	}
+	.hero__text {
+		justify-self: center;
+		max-width: 28rem;
+	}
+	.hero__btns {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 1rem;
+	}
+	.hero__image img {
+		width: 100%;
+		height: 100%;
+		max-height: 70vh;
+		object-fit: cover;
+		border-radius: var(--theme-shape-radius);
+	}
+	.section {
+		margin: var(--section-margin) auto;
+		scroll-margin-top: 1rem;
+	}
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
 		gap: var(--theme-grid-gap);
+		margin-top: 1.5rem;
+	}
+	.card,
+	.step {
+		padding: 1.5rem;
+		background-color: var(--theme-surface-1);
+		color: var(--theme-on-surface-1);
+		border-radius: var(--theme-shape-radius);
+	}
+	.card h3,
+	.step h3 {
+		margin-top: 0;
+	}
+	.price {
+		font-size: var(--font-size-lg);
+		font-weight: 700;
+		margin: 0.25rem 0 0.75rem;
+	}
+	.price span {
+		font-size: var(--font-size-sm);
+		font-weight: 400;
+		opacity: 0.72;
+	}
+	.step__n {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 2rem;
+		height: 2rem;
+		margin-bottom: 0.75rem;
+		border-radius: 50%;
+		background-color: var(--theme-primary);
+		color: var(--theme-on-primary);
+		font-weight: 700;
+	}
+	#contact {
+		scroll-margin-top: 1rem;
+	}
+	.cta__btns {
+		justify-content: center;
 	}
 	@media (max-width: 768px) {
-		.feature-card__grid {
+		.hero {
+			grid-template-columns: 1fr;
+		}
+		.grid {
 			grid-template-columns: 1fr;
 		}
 	}

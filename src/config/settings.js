@@ -1,8 +1,12 @@
 export default {
-	title: `Odyssey Astro Theme | A Marketing Website Theme for Startups and Businesses`,
-	description: `A simple, clean, and modern theme for a startup or businesses' marketing website.`,
-	url: `https://odyssey-theme.sapling.supply`, // No trailing slash!
-	name: `Odyssey`, // The short name of the business or brand name. Used for things like the copyright in the footer.
-	enableThemeSwitcher: true,
-	showPlug: true, // Disable this if you want to remove the plug from the footer. (╯°□°)╯︵ ┻━┻
+	title: `Stein Tutoring | English Lessons Tailored to You`,
+	description: `One-on-one ESL lessons with custom lesson packages built around your goals. R$80 per hour.`,
+	url: `https://steinneves.github.io/fuzzy-train`, // No trailing slash!
+	name: `Stein Tutoring`,
+	enableThemeSwitcher: false,
+	showPlug: false,
+	// TEMPORARY placeholders - replace with real contact details
+	email: `contact@example.com`,
+	whatsapp: `5500000000000`, // country code + area code + number, digits only
+	whatsappDisplay: `+55 00 00000-0000`,
 };
