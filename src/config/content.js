@@ -12,6 +12,10 @@ export default {
 	// Leave '' to hide it.
 	video: { en: '', pt: '' },
 
+	// One or two sentences shown in the "Meet your tutor" strip under the home page hero.
+	// While empty, a placeholder sentence and a grey silhouette are shown so you can see the layout.
+	intro: { en: '', pt: '' },
+
 	// Your bio: a list of short paragraphs per language. Leave [] to hide it.
 	bio: {
 		en: [],
