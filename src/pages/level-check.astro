@@ -1,0 +1,23 @@
+---
+import { Container } from '@components/odyssey-theme';
+import Layout from '../layouts/Page.astro';
+import T from '../components/T.astro';
+import Quiz from '../components/Quiz.astro';
+import CtaSection from '../components/CtaSection.astro';
+
+const seo = {
+	title: 'Level check | Stein Tutoring',
+	titlePt: 'Teste de nível | Stein Tutoring',
+	description: 'A quick eight-question check to estimate your level.',
+};
+---
+
+<Layout seo={seo}>
+	<Container>
+		<h1 class="page-title"><T en="Portuguese level check" pt="Teste de nível de inglês" /></h1>
+		<p><T en="Eight quick questions to estimate your level." pt="Oito perguntas rápidas para estimar seu nível." /></p>
+		<Quiz />
+	</Container>
+
+	<CtaSection />
+</Layout>

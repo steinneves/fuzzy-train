@@ -5,12 +5,14 @@ import '../../styles/index.css';
 
 export interface Props {
 	title?: string;
+	titlePt?: string;
 	description?: string;
 	canonicalURL?: URL | string;
 	image?: string;
 }
 
 const title = Astro.props.title || settings.title;
+const titlePt = Astro.props.titlePt || settings.titlePt;
 const description = Astro.props.description || settings.description;
 const canonicalURL = Astro.props.canonicalURL || new URL(Astro.url.pathname, Astro.site);
 const image = new URL(Astro.props.image || `${import.meta.env.BASE_URL}/social.png`.replace(/\/\//g, '/'), Astro.site);
@@ -50,7 +52,7 @@ const image = new URL(Astro.props.image || `${import.meta.env.BASE_URL}/social.p
 	})();
 </script>
 <meta name="theme-color" content="#000000" />
-<meta name="title-pt" content={settings.titlePt} />
+<meta name="title-pt" content={titlePt} />
 <!-- Primary Meta Tags -->
 <title>{title}</title>
 <meta name="title" content={title} />

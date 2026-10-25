@@ -1,0 +1,30 @@
+---
+// Renders nothing until testimonials are added in src/config/content.js
+import { Container } from '@components/odyssey-theme';
+import T from './T.astro';
+import content from '../config/content.js';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const items = content.testimonials ?? [];
+const img = (p) => (/^https?:/.test(p) ? p : `${base}/${p.replace(/^\//, '')}`);
+---
+
+{items.length > 0 && (
+	<Container>
+		<section id="testimonials" class="section reveal">
+			<h2><T en="What students say" pt="O que os alunos dizem" /></h2>
+			<div class="grid">
+				{items.map((t) => (
+					<figure class="quote" data-t={t.lang === 'pt' ? 'pt' : 'en'}>
+						{t.image && <img src={img(t.image)} alt="" loading="lazy" />}
+						{t.quote && <blockquote>{t.quote}</blockquote>}
+						<figcaption>
+							<strong>{t.name}</strong>
+							{t.detail && <span>{t.detail}</span>}
+						</figcaption>
+					</figure>
+				))}
+			</div>
+		</section>
+	</Container>
+)}

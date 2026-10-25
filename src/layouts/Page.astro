@@ -6,6 +6,7 @@ import Logo from '../components/Logo.astro';
 import LangToggle from '../components/LangToggle.astro';
 import BookingModal from '../components/BookingModal.astro';
 import LanguageChooser from '../components/LanguageChooser.astro';
+import Fab from '../components/Fab.astro';
 import T from '../components/T.astro';
 import settings from '../config/settings';
 import { footerLists, footerSocials } from '../config/footer';
@@ -32,6 +33,7 @@ const { seo } = Astro.props as Props;
 	<div id="page">
 		<slot />
 	</div>
+	<Fab />
 	<LanguageChooser />
 	<BookingModal />
 	<Footer
@@ -48,6 +50,26 @@ const { seo } = Astro.props as Props;
 </Layout>
 
 <script>
+	// Scroll-reveal for sections marked .reveal (content stays visible without JS).
+	document.documentElement.classList.add('js');
+	const revealEls = document.querySelectorAll('.reveal');
+	const showEl = (el) => el.classList.add('is-visible');
+	if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+		const io = new IntersectionObserver(
+			(entries) =>
+				entries.forEach((e) => {
+					if (e.isIntersecting) {
+						showEl(e.target);
+						io.unobserve(e.target);
+					}
+				}),
+			{ threshold: 0.12 }
+		);
+		revealEls.forEach((el) => io.observe(el));
+	} else {
+		revealEls.forEach(showEl);
+	}
+
 	// Close the mobile menu when a menu link is tapped.
 	const header = document.getElementById('odysseyNavHeader');
 	const menuButton = document.getElementById('menuButton');
@@ -64,7 +86,7 @@ const { seo } = Astro.props as Props;
 		align-items: center;
 		gap: 0.75rem;
 	}
-	@media (max-width: 600px) {
+	@media (max-width: 860px) {
 		.header-actions {
 			gap: 0.4rem;
 		}

@@ -3,13 +3,13 @@ import { Icon } from 'astro-icon/components';
 import { Container, Button } from '@components/odyssey-theme';
 import Layout from '../layouts/Page.astro';
 import T from '../components/T.astro';
+import CtaSection from '../components/CtaSection.astro';
+import Testimonials from '../components/Testimonials.astro';
 import settings from '../config/settings.js';
+import { waEn, waPt } from '../config/links.js';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
-const wa = (msg) => `https://wa.me/${settings.whatsapp}?text=${encodeURIComponent(msg)}`;
-const waEn = wa("Hi! I'd like to book a trial Portuguese lesson.");
-const waPt = wa('Olá! Gostaria de agendar uma aula experimental de inglês.');
 
 const usd = `US$${settings.priceUsd}`;
 const brl = `R$${settings.priceBrl}`;
@@ -162,35 +162,7 @@ const jsonLd = {
 		</section>
 	</Container>
 
-	<Container>
-		<section id="about" class="section about reveal">
-			<div class="about__photo">
-				<img
-					src={`${base}/assets/images/about/tutor-photo.jpg`}
-					alt="Your tutor"
-					data-pt-alt="Seu tutor"
-					width="900"
-					height="1100"
-					loading="lazy"
-				/>
-			</div>
-			<div class="about__text">
-				<h2><T en="About me" pt="Sobre mim" /></h2>
-				<p><T en="Lessons planned for you, one student at a time." pt="Aulas planejadas para você, um aluno de cada vez." /></p>
-				<figure class="about__page">
-					<img
-						src={`${base}/assets/images/about/lesson-page.jpg`}
-						alt="A sample lesson page"
-						data-pt-alt="Exemplo de página de aula"
-						width="900"
-						height="1180"
-						loading="lazy"
-					/>
-					<figcaption><T en="A sample lesson page" pt="Exemplo de página de aula" /></figcaption>
-				</figure>
-			</div>
-		</section>
-	</Container>
+	<Testimonials />
 
 	<Container>
 		<section id="how-it-works" class="section reveal">
@@ -209,49 +181,17 @@ const jsonLd = {
 	</Container>
 
 	<Container>
-		<section id="contact" class="section contact reveal">
-			<h2><T en="Ready to start?" pt="Pronto para começar?" /></h2>
-			<p><T en="Tell me what you want to achieve and I will suggest a plan." pt="Conte o que você quer alcançar e eu sugiro um plano." /></p>
-			<div class="contact__grid">
-				<a class="contact__tile contact__tile--wa" href={waEn} data-pt-href={waPt} target="_blank" rel="noopener noreferrer">
-					<Icon name="mdi:whatsapp" width="32" height="32" />
-					<span class="contact__label">WhatsApp</span>
-					<span class="contact__value">{settings.whatsappDisplay}</span>
-				</a>
-				<button type="button" class="contact__tile" data-open-booking>
-					<Icon name="mdi:email-outline" width="32" height="32" />
-					<span class="contact__label"><T en="Send a message" pt="Enviar mensagem" /></span>
-					<span class="contact__value"><T en="Opens a short form" pt="Abre um formulário curto" /></span>
-				</button>
+		<section class="section callout reveal">
+			<div>
+				<h2><T en="Not sure of your level?" pt="Não sabe qual é o seu nível?" /></h2>
+				<p><T en="Take the quick level check. It takes about two minutes." pt="Faça o teste de nível rápido. Leva cerca de dois minutos." /></p>
 			</div>
+			<Button href={`${base}/level-check/`}><T en="Take the level check" pt="Fazer o teste de nível" /></Button>
 		</section>
 	</Container>
 
-	<a class="fab" href={waEn} data-pt-href={waPt} target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp" data-pt-aria-label="Conversar no WhatsApp">
-		<Icon name="mdi:whatsapp" width="28" height="28" />
-	</a>
+	<CtaSection />
 </Layout>
-
-<script>
-	document.documentElement.classList.add('js');
-	const els = document.querySelectorAll('.reveal');
-	const show = (el) => el.classList.add('is-visible');
-	if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-		const io = new IntersectionObserver(
-			(entries) =>
-				entries.forEach((e) => {
-					if (e.isIntersecting) {
-						show(e.target);
-						io.unobserve(e.target);
-					}
-				}),
-			{ threshold: 0.12 }
-		);
-		els.forEach((el) => io.observe(el));
-	} else {
-		els.forEach(show);
-	}
-</script>
 
 <style>
 	.hero {
@@ -265,14 +205,6 @@ const jsonLd = {
 	.hero__text {
 		justify-self: center;
 		max-width: 28rem;
-	}
-	.eyebrow {
-		margin: 0 0 0.5rem;
-		font-size: var(--font-size-sm);
-		font-weight: 700;
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-		opacity: 0.72;
 	}
 	.chips {
 		margin: 1.25rem 0;
@@ -307,194 +239,8 @@ const jsonLd = {
 		object-fit: cover;
 		border-radius: var(--theme-shape-radius);
 	}
-	.section {
-		margin: var(--section-margin) auto;
-	}
-	.grid {
-		display: grid;
-		grid-template-columns: repeat(3, 1fr);
-		gap: var(--theme-grid-gap);
-		margin: 1.5rem 0 0;
-		padding: 0;
-		list-style: none;
-	}
-	.card,
-	.step {
-		position: relative;
-		padding: 1.5rem;
-		background-color: var(--theme-surface-1);
-		color: var(--theme-on-surface-1);
-		border-radius: var(--theme-shape-radius);
-		transition: transform var(--theme-transition), box-shadow var(--theme-transition);
-	}
-	.card:hover,
-	.step:hover {
-		transform: translateY(-4px);
-		box-shadow: 0 10px 24px rgb(0 0 0 / 0.12);
-	}
-	.card {
-		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-	}
-	.card h3,
-	.step h3 {
-		margin: 0.75rem 0 0;
-	}
-	.card__text {
-		flex: 1;
-		margin-bottom: 1.25rem;
-	}
-	.card--featured {
-		background-color: var(--theme-primary);
-		color: var(--theme-on-primary);
-	}
-	.badge {
-		position: absolute;
-		top: 1rem;
-		right: 1rem;
-		padding: 0.15rem 0.7rem;
-		border-radius: 3rem;
-		background-color: var(--theme-surface-2);
-		color: var(--theme-on-surface-2);
-		font-size: var(--font-size-sm);
-		font-weight: 700;
-	}
-	.icon-circle {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		width: 3rem;
-		height: 3rem;
-		border-radius: 50%;
-		background-color: var(--theme-surface-2);
-		color: var(--theme-on-surface-2);
-	}
-	.price {
-		font-size: var(--font-size-lg);
-		font-weight: 700;
-		margin: 0.25rem 0 0.75rem;
-	}
-	.price span {
-		font-size: var(--font-size-sm);
-		font-weight: 400;
-		opacity: 0.72;
-	}
-	.step__n {
-		position: absolute;
-		top: 1rem;
-		right: 1.25rem;
-		font-size: var(--font-size-xl);
-		font-weight: 700;
-		opacity: 0.18;
-		line-height: 1;
-	}
-	.contact__grid {
-		display: grid;
-		grid-template-columns: repeat(2, 1fr);
-		gap: var(--theme-grid-gap);
-		margin-top: 1.5rem;
-	}
-	.contact__tile {
-		font: inherit;
-		text-align: left;
-		border: none;
-		cursor: pointer;
-		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-		gap: 0.25rem;
-		padding: 1.5rem;
-		background-color: var(--theme-surface-2);
-		color: var(--theme-on-surface-2);
-		border-radius: var(--theme-shape-radius);
-		text-decoration: none;
-		transition: transform var(--theme-transition), box-shadow var(--theme-transition);
-		overflow-wrap: anywhere;
-	}
-	.contact__tile:hover {
-		transform: translateY(-4px);
-		box-shadow: 0 10px 24px rgb(0 0 0 / 0.12);
-	}
-	.contact__label {
-		font-weight: 700;
-		margin-top: 0.5rem;
-	}
-	.contact__value {
-		font-size: var(--font-size-md);
-	}
-
-	.about {
-		display: grid;
-		grid-template-columns: 1fr 1.2fr;
-		gap: 2rem;
-		align-items: center;
-	}
-	.about__photo img {
-		display: block;
-		width: 100%;
-		height: auto;
-		border-radius: var(--theme-shape-radius);
-		object-fit: cover;
-	}
-	.about__page {
-		margin: 1.5rem 0 0;
-		max-width: 18rem;
-		transform: rotate(-2deg);
-		transition: transform var(--theme-transition);
-	}
-	.about__page:hover {
-		transform: rotate(0deg) scale(1.03);
-	}
-	.about__page img {
-		display: block;
-		width: 100%;
-		height: auto;
-		border-radius: 0.5rem;
-		box-shadow: 0 12px 30px rgb(0 0 0 / 0.25);
-	}
-	.about__page figcaption {
-		margin-top: 0.75rem;
-		font-size: var(--font-size-sm);
-		opacity: 0.72;
-	}
-	.contact__tile--wa {
-		background-color: #25d366;
-		color: #000;
-	}
-	.fab {
-		position: fixed;
-		right: 1rem;
-		bottom: 1rem;
-		z-index: 80;
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		width: 3.5rem;
-		height: 3.5rem;
-		border-radius: 50%;
-		background-color: #25d366;
-		color: #000;
-		box-shadow: 0 6px 18px rgb(0 0 0 / 0.3);
-		transition: transform var(--theme-transition);
-	}
-	.fab:hover {
-		transform: scale(1.08);
-	}
-	:global(.js) .reveal:not(.is-visible) {
-		opacity: 0;
-		transform: translateY(1.5rem);
-	}
-	.reveal {
-		transition: opacity 0.6s ease, transform 0.6s ease;
-	}
 	@media (max-width: 768px) {
 		.hero {
-			grid-template-columns: 1fr;
-		}
-		.grid,
-		.contact__grid,
-		.about {
 			grid-template-columns: 1fr;
 		}
 	}

@@ -1,0 +1,91 @@
+---
+import { Container } from '@components/odyssey-theme';
+import Layout from '../layouts/Page.astro';
+import T from '../components/T.astro';
+import CtaSection from '../components/CtaSection.astro';
+import settings from '../config/settings.js';
+
+const seo = {
+	title: 'FAQ | Stein Tutoring',
+	titlePt: 'Perguntas frequentes | Stein Tutoring',
+	description: 'Answers to common questions about trial lessons, prices, scheduling and payment.',
+};
+
+const usd = `US$${settings.priceUsd}`;
+const brl = `R$${settings.priceBrl}`;
+
+const faqs = [
+	{
+		q: { en: 'What happens in the trial lesson?', pt: 'O que acontece na aula experimental?' },
+		a: {
+			en: 'We talk about your goals, I get to know your level and we try a short sample of how lessons work. There is no commitment to continue.',
+			pt: 'Conversamos sobre seus objetivos, eu conheço seu nível e fazemos uma amostra de como as aulas funcionam. Sem compromisso de continuar.',
+		},
+	},
+	{
+		q: { en: 'Do I need a certain level?', pt: 'Preciso ter algum nível?' },
+		a: {
+			en: 'No. Lessons are adapted to your level, from complete beginners to advanced students.',
+			pt: 'Não. As aulas são adaptadas ao seu nível, de iniciantes a avançados.',
+		},
+	},
+	{
+		q: { en: 'How much do lessons cost?', pt: 'Quanto custam as aulas?' },
+		a: {
+			en: `Lessons are ${usd} per hour. Custom packages are agreed after we talk about your goals.`,
+			pt: `As aulas custam ${brl} por hora. Pacotes personalizados são combinados depois que conversamos sobre seus objetivos.`,
+		},
+	},
+	{
+		q: { en: 'How are lessons scheduled?', pt: 'Como as aulas são agendadas?' },
+		a: {
+			en: 'We agree on days and times that fit your routine, usually on a weekly basis.',
+			pt: 'Combinamos dias e horários que cabem na sua rotina, normalmente toda semana.',
+		},
+	},
+	{
+		q: { en: 'What if I need to reschedule?', pt: 'E se eu precisar remarcar?' },
+		a: {
+			en: 'Just let me know in advance and we will find a new time.',
+			pt: 'Avise com antecedência e encontramos um novo horário.',
+		},
+	},
+	{
+		q: { en: 'How do I pay?', pt: 'Como faço o pagamento?' },
+		a: {
+			en: 'We agree on the payment method when we set up your plan.',
+			pt: 'Combinamos a forma de pagamento quando montamos seu plano.',
+		},
+	},
+	{
+		q: { en: 'Can I prepare for an exam, interview or trip?', pt: 'Posso me preparar para uma prova, entrevista ou viagem?' },
+		a: {
+			en: 'Yes. A custom package focuses on exactly what you need.',
+			pt: 'Sim. O pacote personalizado foca exatamente no que você precisa.',
+		},
+	},
+	{
+		q: { en: 'What materials do I need?', pt: 'De quais materiais preciso?' },
+		a: {
+			en: 'Just something to take notes with. I prepare the lesson material.',
+			pt: 'Basta algo para anotar. Eu preparo o material das aulas.',
+		},
+	},
+];
+---
+
+<Layout seo={seo}>
+	<Container>
+		<h1 class="page-title"><T en="Frequently asked questions" pt="Perguntas frequentes" /></h1>
+		<div class="faq section">
+			{faqs.map((f) => (
+				<details>
+					<summary><span><T en={f.q.en} pt={f.q.pt} /></span></summary>
+					<p><T en={f.a.en} pt={f.a.pt} /></p>
+				</details>
+			))}
+		</div>
+	</Container>
+
+	<CtaSection />
+</Layout>

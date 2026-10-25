@@ -1,0 +1,93 @@
+---
+import quiz from '../config/quiz.js';
+---
+
+<div class="quiz" data-quiz>
+	<div data-quiz-body aria-live="polite"></div>
+</div>
+<script type="application/json" id="quiz-data" is:inline set:html={JSON.stringify(quiz)} />
+
+<script>
+	const data = JSON.parse(document.getElementById('quiz-data').textContent);
+	const body = document.querySelector('[data-quiz-body]');
+	const getLang = () => (document.documentElement.getAttribute('data-lang') === 'pt' ? 'pt' : 'en');
+	let lang = getLang();
+	let state = { i: 0, score: 0 };
+
+	function el(tag, cls, text) {
+		const e = document.createElement(tag);
+		if (cls) e.className = cls;
+		if (text !== undefined) e.textContent = text;
+		return e;
+	}
+
+	function render() {
+		const d = data[lang];
+		const n = d.questions.length;
+		body.replaceChildren();
+
+		if (state.i >= n) {
+			const level = d.levels.find((l) => state.score <= l.max) || d.levels[d.levels.length - 1];
+			const wrap = el('div', 'quiz__result');
+			wrap.append(
+				el('p', 'quiz__progress', d.ui.title),
+				el('p', 'quiz__code', level.code),
+				el('p', 'quiz__name', level.name),
+				el('p', '', level.desc),
+				el('p', 'quiz__note', d.ui.score.replace('{s}', state.score).replace('{n}', n)),
+				el('p', 'quiz__note', d.ui.note)
+			);
+			const actions = el('div', 'quiz__actions');
+			const book = el('button', 'pill-btn', d.ui.cta);
+			book.type = 'button';
+			book.setAttribute('data-open-booking', '');
+			const msg = d.ui.msg.replace('{code}', level.code).replace('{name}', level.name);
+			book.dataset.msgEn = msg;
+			book.dataset.msgPt = msg;
+			const again = el('button', 'pill-btn pill-btn--outline', d.ui.retake);
+			again.type = 'button';
+			again.addEventListener('click', reset);
+			actions.append(book, again);
+			wrap.append(actions);
+			body.append(wrap);
+			return;
+		}
+
+		const q = d.questions[state.i];
+		const bar = el('div', 'quiz__bar');
+		const fill = el('span');
+		fill.style.width = `${(state.i / n) * 100}%`;
+		bar.append(fill);
+		const options = el('div', 'quiz__options');
+		q.options.forEach((text, idx) => {
+			const b = el('button', 'quiz__opt', text);
+			b.type = 'button';
+			b.addEventListener('click', () => {
+				if (idx === q.answer) state.score++;
+				state.i++;
+				render();
+			});
+			options.append(b);
+		});
+		body.append(
+			el('p', 'quiz__progress', d.ui.question.replace('{i}', state.i + 1).replace('{n}', n)),
+			bar,
+			el('h2', 'quiz__q', q.q),
+			options
+		);
+	}
+
+	function reset() {
+		state = { i: 0, score: 0 };
+		render();
+	}
+
+	document.addEventListener('langchange', (e) => {
+		const next = e.detail === 'pt' ? 'pt' : 'en';
+		if (next !== lang) {
+			lang = next;
+			reset();
+		}
+	});
+	render();
+</script>

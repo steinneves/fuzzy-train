@@ -1,0 +1,36 @@
+---
+// Accepts a YouTube link, a Vimeo link, or a path to an .mp4/.webm file.
+const { url = '' } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+let kind = 'none';
+let src = '';
+const yt = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|shorts\/|embed\/))([\w-]{11})/);
+const vm = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
+if (yt) {
+	kind = 'iframe';
+	src = `https://www.youtube-nocookie.com/embed/${yt[1]}`;
+} else if (vm) {
+	kind = 'iframe';
+	src = `https://player.vimeo.com/video/${vm[1]}`;
+} else if (/\.(mp4|webm|mov)(\?.*)?$/i.test(url)) {
+	kind = 'file';
+	src = /^https?:/.test(url) ? url : `${base}/${url.replace(/^\//, '')}`;
+}
+---
+
+{kind !== 'none' && (
+	<div class="video">
+		{kind === 'iframe' ? (
+			<iframe
+				src={src}
+				title="Intro video"
+				loading="lazy"
+				allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+				allowfullscreen
+			></iframe>
+		) : (
+			<video src={src} controls preload="metadata" playsinline></video>
+		)}
+	</div>
+)}

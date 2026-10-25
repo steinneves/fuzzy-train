@@ -3,11 +3,10 @@ import { Icon } from 'astro-icon/components';
 import { Button } from '@components/odyssey-theme';
 import T from './T.astro';
 import settings from '../config/settings.js';
+import { waEn, waPt } from '../config/links.js';
 
 const endpoint = settings.formEndpoint || '';
-const wa = (msg) => `https://wa.me/${settings.whatsapp}?text=${encodeURIComponent(msg)}`;
-const waEn = wa("Hi! I'd like to book a trial Portuguese lesson.");
-const waPt = wa('Olá! Gostaria de agendar uma aula experimental de inglês.');
+
 ---
 
 <dialog id="booking" aria-labelledby="booking-title">
@@ -58,8 +57,9 @@ const waPt = wa('Olá! Gostaria de agendar uma aula experimental de inglês.');
 			const label = pt ? opener.dataset.planPt : opener.dataset.plan;
 			const msg = form.elements.message;
 			// Prefill, but never overwrite something the visitor typed.
+			const custom = pt ? opener.dataset.msgPt : opener.dataset.msgEn;
 			if (!msg.value.trim() || msg.dataset.prefilled === 'true') {
-				msg.value = label
+				msg.value = custom ? custom : label
 					? pt ? `Tenho interesse em: ${label}.` : `I'm interested in: ${label}.`
 					: pt ? 'Tenho interesse em agendar uma aula experimental.' : "I'm interested in booking a trial lesson.";
 				msg.dataset.prefilled = 'true';

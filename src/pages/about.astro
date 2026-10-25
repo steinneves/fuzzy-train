@@ -1,0 +1,114 @@
+---
+import { Container } from '@components/odyssey-theme';
+import Layout from '../layouts/Page.astro';
+import T from '../components/T.astro';
+import VideoEmbed from '../components/VideoEmbed.astro';
+import CtaSection from '../components/CtaSection.astro';
+import content from '../config/content.js';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const seo = {
+	title: 'About | Stein Tutoring',
+	titlePt: 'Sobre | Stein Tutoring',
+	description: 'How lessons work with Stein Tutoring, and what a lesson looks like.',
+};
+
+const photo = content.photo ? `${base}/${content.photo.replace(/^\//, '')}` : '';
+const hasBio = content.bio.en.length > 0 || content.bio.pt.length > 0;
+const hasVideo = Boolean(content.video.en || content.video.pt);
+const showBio = Boolean(photo) || hasBio || hasVideo;
+
+const steps = [
+	{
+		min: 10,
+		title: { en: 'Warm-up', pt: 'Aquecimento' },
+		text: {
+			en: 'A relaxed conversation to get you speaking and set the goal for the day.',
+			pt: 'Uma conversa leve para você começar a falar e definir o objetivo do dia.',
+		},
+	},
+	{
+		min: 25,
+		title: { en: 'Focus', pt: 'Foco' },
+		text: {
+			en: 'The core of the lesson: grammar, vocabulary or a real-life situation.',
+			pt: 'O centro da aula: gramática, vocabulário ou uma situação real.',
+		},
+	},
+	{
+		min: 15,
+		title: { en: 'Practice', pt: 'Prática' },
+		text: {
+			en: 'You use what you just learned in speaking and writing exercises.',
+			pt: 'Você usa o que acabou de aprender em exercícios de fala e escrita.',
+		},
+	},
+	{
+		min: 10,
+		title: { en: 'Review', pt: 'Revisão' },
+		text: {
+			en: 'Feedback, key takeaways and a short task for next time.',
+			pt: 'Feedback, pontos principais e uma tarefa curta para a próxima aula.',
+		},
+	},
+];
+---
+
+<Layout seo={seo}>
+	<Container>
+		<h1 class="page-title"><T en="About" pt="Sobre" /></h1>
+		<p><T en="Lessons planned for you, one student at a time." pt="Aulas planejadas para você, um aluno de cada vez." /></p>
+	</Container>
+
+	{showBio && (
+		<Container>
+			<section class:list={['section', 'about-bio', 'reveal', { 'about-bio--solo': !photo }]}>
+				{photo && (
+					<img class="about-bio__photo" src={photo} alt="Your tutor" data-pt-alt="Seu tutor" width="900" height="1100" loading="lazy" />
+				)}
+				<div>
+					<h2><T en="About me" pt="Sobre mim" /></h2>
+					{content.bio.en.length > 0 && (
+						<div data-t="en">{content.bio.en.map((p) => <p>{p}</p>)}</div>
+					)}
+					{content.bio.pt.length > 0 && (
+						<div data-t="pt">{content.bio.pt.map((p) => <p>{p}</p>)}</div>
+					)}
+					{content.video.en && <div data-t="en"><VideoEmbed url={content.video.en} /></div>}
+					{content.video.pt && <div data-t="pt"><VideoEmbed url={content.video.pt} /></div>}
+				</div>
+			</section>
+		</Container>
+	)}
+
+	<Container>
+		<section id="lesson" class="section lesson reveal">
+			<div>
+				<h2><T en="What a lesson looks like" pt="Como é uma aula" /></h2>
+				<p><T en="A typical 60-minute lesson." pt="Uma aula típica de 60 minutos." /></p>
+				<ol class="timeline">
+					{steps.map((st) => (
+						<li>
+							<h3>
+								<T en={st.title.en} pt={st.title.pt} />
+								<span class="timeline__min">{st.min} min</span>
+							</h3>
+							<p><T en={st.text.en} pt={st.text.pt} /></p>
+						</li>
+					))}
+				</ol>
+			</div>
+			<figure class="lesson__page">
+				<div data-t="pt">
+					<img src={`${base}/assets/images/about/lesson-page-english.jpg`} alt="A sample English lesson page" width="900" height="1180" loading="lazy" />
+				</div>
+				<div data-t="en">
+					<img src={`${base}/assets/images/about/lesson-page-portuguese.jpg`} alt="A sample Portuguese lesson page" width="900" height="1180" loading="lazy" />
+				</div>
+				<figcaption><T en="A sample lesson page" pt="Exemplo de página de aula" /></figcaption>
+			</figure>
+		</section>
+	</Container>
+
+	<CtaSection />
+</Layout>

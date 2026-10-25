@@ -39,6 +39,7 @@ import Flag from './Flag.astro';
 			b.setAttribute('aria-pressed', String(b.dataset.setLang === lang))
 		);
 		setAttrs(lang);
+		document.dispatchEvent(new CustomEvent('langchange', { detail: lang }));
 		const ptTitle = document.querySelector('meta[name="title-pt"]')?.getAttribute('content');
 		const enTitle = document.querySelector('meta[name="title"]')?.getAttribute('content');
 		if (ptTitle && enTitle) document.title = lang === 'pt' ? ptTitle : enTitle;

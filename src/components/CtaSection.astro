@@ -1,0 +1,26 @@
+---
+import { Icon } from 'astro-icon/components';
+import { Container } from '@components/odyssey-theme';
+import T from './T.astro';
+import settings from '../config/settings.js';
+import { waEn, waPt } from '../config/links.js';
+---
+
+<Container>
+	<section id="contact" class="section reveal">
+		<h2><T en="Ready to start?" pt="Pronto para começar?" /></h2>
+		<p><T en="Tell me what you want to achieve and I will suggest a plan." pt="Conte o que você quer alcançar e eu sugiro um plano." /></p>
+		<div class="contact__grid">
+			<a class="contact__tile contact__tile--wa" href={waEn} data-pt-href={waPt} target="_blank" rel="noopener noreferrer">
+				<Icon name="mdi:whatsapp" width="32" height="32" />
+				<span class="contact__label">WhatsApp</span>
+				<span class="contact__value">{settings.whatsappDisplay}</span>
+			</a>
+			<button type="button" class="contact__tile" data-open-booking>
+				<Icon name="mdi:email-outline" width="32" height="32" />
+				<span class="contact__label"><T en="Send a message" pt="Enviar mensagem" /></span>
+				<span class="contact__value"><T en="Opens a short form" pt="Abre um formulário curto" /></span>
+			</button>
+		</div>
+	</section>
+</Container>
