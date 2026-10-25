@@ -18,23 +18,6 @@ const chips = [
 	{ icon: 'mdi:account-voice', en: 'One-on-one', pt: 'Aulas individuais' },
 	{ icon: 'mdi:clock-outline', en: `${usd} / hour`, pt: `${brl} / hora` },
 	{ icon: 'mdi:tune-variant', en: 'Custom packages', pt: 'Pacotes personalizados' },
-	{ icon: 'mdi:map-marker-outline', en: 'Online or in person', pt: 'Online ou presencial' },
-];
-
-const formats = [
-	{
-		icon: 'mdi:video-outline',
-		title: { en: 'Online', pt: 'Online' },
-		text: { en: 'Lessons by video call, from wherever you are.', pt: 'Aulas por videochamada, de onde você estiver.' },
-	},
-	{
-		icon: 'mdi:map-marker-outline',
-		title: { en: 'In person', pt: 'Presencial' },
-		text: {
-			en: 'I can come to you if you are in the Vila Velha, ES area.',
-			pt: 'Posso ir até você se estiver na região de Vila Velha, ES.',
-		},
-	},
 ];
 
 const packages = [
@@ -96,8 +79,8 @@ const steps = [
 		icon: 'mdi:rocket-launch-outline',
 		title: { en: 'Learn and practice', pt: 'Aprenda e pratique' },
 		text: {
-			en: 'One-on-one lessons, online or in person, with practical material, feedback and steady progress.',
-			pt: 'Aulas individuais, online ou presenciais, com material prático, feedback e progresso constante.',
+			en: 'One-on-one online lessons with practical material, feedback and steady progress.',
+			pt: 'Aulas individuais online com material prático, feedback e progresso constante.',
 		},
 	},
 ];
@@ -108,12 +91,11 @@ const offer = (price, currency) => ({
 	priceCurrency: currency,
 	priceSpecification: { '@type': 'UnitPriceSpecification', price, priceCurrency: currency, unitText: 'HOUR' },
 });
-const areaServed = [{ '@type': 'City', name: 'Vila Velha' }, { '@type': 'AdministrativeArea', name: 'Espírito Santo' }];
 const jsonLd = {
 	'@context': 'https://schema.org',
 	'@graph': [
-		{ '@type': 'Service', areaServed, name: 'English lessons for Brazilians', serviceType: 'English as a Second Language lessons', provider, offers: offer(settings.priceBrl, 'BRL') },
-		{ '@type': 'Service', areaServed, name: 'Portuguese lessons for foreigners', serviceType: 'Portuguese language lessons', provider, offers: offer(settings.priceUsd, 'USD') },
+		{ '@type': 'Service', name: 'English lessons for Brazilians', serviceType: 'English as a Second Language lessons', provider, offers: offer(settings.priceBrl, 'BRL') },
+		{ '@type': 'Service', name: 'Portuguese lessons for foreigners', serviceType: 'Portuguese language lessons', provider, offers: offer(settings.priceUsd, 'USD') },
 	],
 };
 ---
@@ -174,21 +156,6 @@ const jsonLd = {
 						<Button type="button" data-open-booking data-plan={p.plan} data-plan-pt={p.name.pt} outlined={!p.featured} onPrimary={p.featured}>
 							<T en="Ask about this" pt="Quero saber mais" />
 						</Button>
-					</article>
-				))}
-			</div>
-		</section>
-	</Container>
-
-	<Container>
-		<section id="format" class="section reveal">
-			<h2><T en="Online or in person" pt="Online ou presencial" /></h2>
-			<div class="grid grid--two">
-				{formats.map((f) => (
-					<article class="card">
-						<span class="icon-circle"><Icon name={f.icon} width="24" height="24" /></span>
-						<h3><T en={f.title.en} pt={f.title.pt} /></h3>
-						<p><T en={f.text.en} pt={f.text.pt} /></p>
 					</article>
 				))}
 			</div>
@@ -350,9 +317,6 @@ const jsonLd = {
 		margin: 1.5rem 0 0;
 		padding: 0;
 		list-style: none;
-	}
-	.grid--two {
-		grid-template-columns: repeat(2, 1fr);
 	}
 	.card,
 	.step {
@@ -529,7 +493,6 @@ const jsonLd = {
 			grid-template-columns: 1fr;
 		}
 		.grid,
-		.grid--two,
 		.contact__grid,
 		.about {
 			grid-template-columns: 1fr;
