@@ -1,0 +1,115 @@
+---
+// Simple round flag icons, drawn inline so they render on every device.
+const stripes = Array.from({ length: 13 }, (_, i) => i);
+const stars = [];
+for (let r = 0; r < 3; r++) for (let c = 0; c < 4; c++) stars.push([1.6 + c * 2.6, 1.8 + r * 3.3]);
+---
+
+<div class="lang" role="group" aria-label="Language / Idioma">
+	<button type="button" class="lang__btn" data-set-lang="en" aria-pressed="true" title="English" lang="en">
+		<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+			<defs><clipPath id="flag-us"><circle cx="12" cy="12" r="12" /></clipPath></defs>
+			<g clip-path="url(#flag-us)">
+				<rect width="24" height="24" fill="#fff" />
+				{stripes.filter((i) => i % 2 === 0).map((i) => (
+					<rect x="0" y={(i * 24) / 13} width="24" height={24 / 13} fill="#b22234" />
+				))}
+				<rect width="11" height={(7 * 24) / 13} fill="#3c3b6e" />
+				{stars.map(([x, y]) => <circle cx={x} cy={y} r="0.6" fill="#fff" />)}
+			</g>
+		</svg>
+		<span class="lang__code">EN</span>
+	</button>
+	<button type="button" class="lang__btn" data-set-lang="pt" aria-pressed="false" title="Português" lang="pt">
+		<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+			<defs><clipPath id="flag-br"><circle cx="12" cy="12" r="12" /></clipPath></defs>
+			<g clip-path="url(#flag-br)">
+				<rect width="24" height="24" fill="#009b3a" />
+				<polygon points="12,3.5 21.5,12 12,20.5 2.5,12" fill="#ffdf00" />
+				<circle cx="12" cy="12" r="4.6" fill="#002776" />
+				<path d="M7.6 11.2 Q12 9.4 16.4 13" stroke="#fff" stroke-width="0.9" fill="none" />
+			</g>
+		</svg>
+		<span class="lang__code">PT</span>
+	</button>
+</div>
+
+<script>
+	const ATTRS = ['alt', 'placeholder', 'aria-label', 'href', 'title', 'text'];
+	const root = document.documentElement;
+
+	function setAttrs(lang) {
+		for (const a of ATTRS) {
+			document.querySelectorAll(`[data-pt-${a}]`).forEach((el) => {
+				if (a === 'text') {
+					if (el.dataset.enText === undefined) el.dataset.enText = el.textContent;
+					el.textContent = lang === 'pt' ? el.dataset.ptText : el.dataset.enText;
+					return;
+				}
+				const key = `en${a.replace(/(^|-)(\w)/g, (_, __, c) => c.toUpperCase())}`;
+				if (el.dataset[key] === undefined) el.dataset[key] = el.getAttribute(a) ?? '';
+				el.setAttribute(a, lang === 'pt' ? el.getAttribute(`data-pt-${a}`) : el.dataset[key]);
+			});
+		}
+	}
+
+	function apply(lang) {
+		root.setAttribute('data-lang', lang);
+		root.lang = lang === 'pt' ? 'pt-BR' : 'en';
+		document.querySelectorAll('[data-set-lang]').forEach((b) =>
+			b.setAttribute('aria-pressed', String(b.dataset.setLang === lang))
+		);
+		setAttrs(lang);
+		const ptTitle = document.querySelector('meta[name="title-pt"]')?.getAttribute('content');
+		const enTitle = document.querySelector('meta[name="title"]')?.getAttribute('content');
+		if (ptTitle && enTitle) document.title = lang === 'pt' ? ptTitle : enTitle;
+	}
+
+	document.querySelectorAll('[data-set-lang]').forEach((b) =>
+		b.addEventListener('click', () => {
+			const lang = b.dataset.setLang;
+			try { localStorage.setItem('lang', lang); } catch (e) {}
+			apply(lang);
+		})
+	);
+	apply(root.getAttribute('data-lang') === 'pt' ? 'pt' : 'en');
+</script>
+
+<style>
+	.lang {
+		display: inline-flex;
+		gap: 0.25rem;
+		padding: 0.2rem;
+		border-radius: 3rem;
+		background-color: var(--theme-surface-1);
+	}
+	.lang__btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+		padding: 0.2rem 0.55rem 0.2rem 0.25rem;
+		border: 2px solid transparent;
+		border-radius: 3rem;
+		background: transparent;
+		color: var(--theme-on-bg);
+		font: inherit;
+		font-size: var(--font-size-sm);
+		font-weight: 700;
+		cursor: pointer;
+	}
+	.lang__btn svg {
+		display: block;
+	}
+	.lang__btn[aria-pressed='true'] {
+		border-color: var(--theme-primary);
+		background-color: var(--theme-bg);
+	}
+	@media (max-width: 600px) {
+		.lang__code {
+			display: none;
+		}
+		.lang__btn {
+			padding: 0.2rem;
+		}
+	}
+</style>

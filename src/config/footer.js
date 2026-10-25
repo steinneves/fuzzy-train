@@ -8,20 +8,17 @@ export const footerSocials = [
 		url: `https://wa.me/${settings.whatsapp}`,
 		icon: 'mdi:whatsapp',
 	},
-	{
-		name: 'Email',
-		url: `mailto:${settings.email}`,
-		icon: 'mdi:email-outline',
-	},
 ];
 
 export const footerLists = [
 	{
 		title: 'Explore',
+		titlePt: 'Explorar',
 		items: [
-			{ title: 'Packages', slug: `${base}/#packages` },
-			{ title: 'How it works', slug: `${base}/#how-it-works` },
-			{ title: 'Contact', slug: `${base}/#contact` },
+			{ title: 'Packages', titlePt: 'Pacotes', slug: `${base}/#packages` },
+			{ title: 'About', titlePt: 'Sobre', slug: `${base}/#about` },
+			{ title: 'How it works', titlePt: 'Como funciona', slug: `${base}/#how-it-works` },
+			{ title: 'Contact', titlePt: 'Contato', slug: `${base}/#contact` },
 		],
 	},
 ];

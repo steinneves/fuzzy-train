@@ -2,51 +2,84 @@
 import { Icon } from 'astro-icon/components';
 import { Container, Button } from '@components/odyssey-theme';
 import Layout from '../layouts/Page.astro';
+import T from '../components/T.astro';
 import settings from '../config/settings.js';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
-const wa = (msg) =>
-	`https://wa.me/${settings.whatsapp}?text=${encodeURIComponent(msg)}`;
-const waLink = wa("Hi! I'd like to book an English lesson.");
-const mailLink = `mailto:${settings.email}?subject=${encodeURIComponent('English lessons')}`;
+const wa = (msg) => `https://wa.me/${settings.whatsapp}?text=${encodeURIComponent(msg)}`;
+const waEn = wa("Hi! I'd like to book an English lesson.");
+const waPt = wa('Olá! Gostaria de agendar uma aula de inglês.');
 
 const chips = [
-	{ icon: 'mdi:account-voice', label: 'One-on-one' },
-	{ icon: 'mdi:clock-outline', label: 'R$80 / hour' },
-	{ icon: 'mdi:tune-variant', label: 'Custom packages' },
+	{ icon: 'mdi:account-voice', en: 'One-on-one', pt: 'Aulas individuais' },
+	{ icon: 'mdi:clock-outline', en: 'R$80 / hour', pt: 'R$80 / hora' },
+	{ icon: 'mdi:tune-variant', en: 'Custom packages', pt: 'Pacotes personalizados' },
 ];
 
 const packages = [
 	{
 		icon: 'mdi:clock-outline',
-		name: 'Single lesson',
-		price: 'R$80',
-		unit: 'per hour',
-		text: 'Try one hour with no commitment. A good way to meet, set a baseline and decide how to continue.',
+		plan: 'Single lesson',
+		name: { en: 'Single lesson', pt: 'Aula avulsa' },
+		price: { en: 'R$80', pt: 'R$80' },
+		unit: { en: 'per hour', pt: 'por hora' },
+		text: {
+			en: 'Try one hour with no commitment. A good way to meet, set a baseline and decide how to continue.',
+			pt: 'Experimente uma hora, sem compromisso. Uma boa forma de nos conhecermos, definir seu ponto de partida e decidir como continuar.',
+		},
 	},
 	{
 		icon: 'mdi:calendar-check-outline',
-		name: 'Lesson package',
-		price: 'R$80',
-		unit: 'per hour',
-		text: 'A block of hours with a steady weekly rhythm, so you build momentum and keep it.',
+		plan: 'Lesson package',
+		name: { en: 'Lesson package', pt: 'Pacote de aulas' },
+		price: { en: 'R$80', pt: 'R$80' },
+		unit: { en: 'per hour', pt: 'por hora' },
+		text: {
+			en: 'A block of hours with a steady weekly rhythm, so you build momentum and keep it.',
+			pt: 'Um bloco de horas com ritmo semanal constante, para você ganhar embalo e manter.',
+		},
 	},
 	{
 		icon: 'mdi:tune-variant',
-		name: 'Custom package',
-		price: 'Tailored',
-		unit: 'built around you',
-		text: 'Job interviews, travel, exams, conversation or business English. Content and schedule designed for your goal.',
+		plan: 'Custom package',
+		name: { en: 'Custom package', pt: 'Pacote personalizado' },
+		price: { en: 'Tailored', pt: 'Sob medida' },
+		unit: { en: 'built around you', pt: 'feito para você' },
+		text: {
+			en: 'Job interviews, travel, exams, conversation or business English. Content and schedule designed for your goal.',
+			pt: 'Entrevistas de emprego, viagens, provas, conversação ou inglês para negócios. Conteúdo e horários planejados para o seu objetivo.',
+		},
 		featured: true,
-		badge: 'Customizable',
+		badge: { en: 'Customizable', pt: 'Personalizável' },
 	},
-].map((p) => ({ ...p, href: wa(`Hi! I'm interested in the ${p.name.toLowerCase()}.`) }));
+];
 
 const steps = [
-	{ icon: 'mdi:chat-processing-outline', title: 'Tell me your goal', text: 'Message me on WhatsApp or email with what you want to use English for.' },
-	{ icon: 'mdi:clipboard-text-outline', title: 'We build your plan', text: 'We agree on a package, schedule and focus areas that fit your needs.' },
-	{ icon: 'mdi:rocket-launch-outline', title: 'Learn and practice', text: 'One-on-one online lessons with practical material, feedback and steady progress.' },
+	{
+		icon: 'mdi:chat-processing-outline',
+		title: { en: 'Tell me your goal', pt: 'Conte seu objetivo' },
+		text: {
+			en: 'Send me a message with what you want to use English for.',
+			pt: 'Envie uma mensagem dizendo para que você quer usar o inglês.',
+		},
+	},
+	{
+		icon: 'mdi:clipboard-text-outline',
+		title: { en: 'We build your plan', pt: 'Montamos seu plano' },
+		text: {
+			en: 'We agree on a package, schedule and focus areas that fit your needs.',
+			pt: 'Combinamos pacote, horários e focos que se encaixam nas suas necessidades.',
+		},
+	},
+	{
+		icon: 'mdi:rocket-launch-outline',
+		title: { en: 'Learn and practice', pt: 'Aprenda e pratique' },
+		text: {
+			en: 'One-on-one online lessons with practical material, feedback and steady progress.',
+			pt: 'Aulas individuais online com material prático, feedback e progresso constante.',
+		},
+	},
 ];
 
 const jsonLd = {
@@ -74,23 +107,25 @@ const jsonLd = {
 	<Container>
 		<section class="hero">
 			<div class="hero__text">
-				<p class="eyebrow">ESL tutoring</p>
-				<h1>English lessons built around you</h1>
+				<p class="eyebrow"><T en="ESL tutoring" pt="Aulas de inglês (ESL)" /></p>
+				<h1><T en="English lessons built around you" pt="Aulas de inglês feitas sob medida para você" /></h1>
 				<p>
-					One-on-one ESL tutoring with lesson packages designed for your
-					goals, schedule and level. R$80 per hour.
+					<T
+						en="One-on-one ESL tutoring with lesson packages designed for your goals, schedule and level. R$80 per hour."
+						pt="Aulas particulares de inglês com pacotes pensados para seus objetivos, sua rotina e seu nível. R$80 por hora."
+					/>
 				</p>
-				<ul class="chips" aria-label="Highlights">
+				<ul class="chips" aria-label="Highlights" data-pt-aria-label="Destaques">
 					{chips.map((c) => (
-						<li class="chip"><Icon name={c.icon} width="18" height="18" /> {c.label}</li>
+						<li class="chip"><Icon name={c.icon} width="18" height="18" /> <T en={c.en} pt={c.pt} /></li>
 					))}
 				</ul>
 				<div class="btn-row">
-					<Button href={waLink} newTab customIcon>
-						Message on WhatsApp
+					<Button type="button" data-open-booking><T en="Book a lesson" pt="Agendar aula" /></Button>
+					<Button href={waEn} data-pt-href={waPt} newTab outlined customIcon>
+						<T en="Message on WhatsApp" pt="Chamar no WhatsApp" />
 						<Fragment slot="icon"><Icon name="mdi:whatsapp" width="20" height="20" /></Fragment>
 					</Button>
-					<Button href={mailLink} outlined>Send an email</Button>
 				</div>
 			</div>
 			<div class="hero__image">
@@ -109,17 +144,19 @@ const jsonLd = {
 
 	<Container>
 		<section id="packages" class="section reveal">
-			<h2>Lesson packages</h2>
-			<p>Every student is different, so every package can be adjusted.</p>
+			<h2><T en="Lesson packages" pt="Pacotes de aulas" /></h2>
+			<p><T en="Every student is different, so every package can be adjusted." pt="Cada aluno é diferente, então todo pacote pode ser ajustado." /></p>
 			<div class="grid">
 				{packages.map((p) => (
 					<article class:list={['card', { 'card--featured': p.featured }]}>
-						{p.badge && <span class="badge">{p.badge}</span>}
+						{p.badge && <span class="badge"><T en={p.badge.en} pt={p.badge.pt} /></span>}
 						<span class="icon-circle"><Icon name={p.icon} width="24" height="24" /></span>
-						<h3>{p.name}</h3>
-						<p class="price">{p.price} <span>{p.unit}</span></p>
-						<p class="card__text">{p.text}</p>
-						<Button href={p.href} newTab outlined={!p.featured} onPrimary={p.featured}>Ask about this</Button>
+						<h3><T en={p.name.en} pt={p.name.pt} /></h3>
+						<p class="price"><T en={p.price.en} pt={p.price.pt} /> <span><T en={p.unit.en} pt={p.unit.pt} /></span></p>
+						<p class="card__text"><T en={p.text.en} pt={p.text.pt} /></p>
+						<Button type="button" data-open-booking data-plan={p.plan} outlined={!p.featured} onPrimary={p.featured}>
+							<T en="Ask about this" pt="Quero saber mais" />
+						</Button>
 					</article>
 				))}
 			</div>
@@ -127,15 +164,45 @@ const jsonLd = {
 	</Container>
 
 	<Container>
+		<section id="about" class="section about reveal">
+			<div class="about__photo">
+				<img
+					src={`${base}/assets/images/about/tutor-photo.jpg`}
+					alt="Your tutor"
+					data-pt-alt="Seu tutor"
+					width="900"
+					height="1100"
+					loading="lazy"
+				/>
+			</div>
+			<div class="about__text">
+				<h2><T en="About me" pt="Sobre mim" /></h2>
+				<p><T en="Lessons planned for you, one student at a time." pt="Aulas planejadas para você, um aluno de cada vez." /></p>
+				<figure class="about__page">
+					<img
+						src={`${base}/assets/images/about/lesson-page.jpg`}
+						alt="A sample lesson page"
+						data-pt-alt="Exemplo de página de aula"
+						width="900"
+						height="1180"
+						loading="lazy"
+					/>
+					<figcaption><T en="A sample lesson page" pt="Exemplo de página de aula" /></figcaption>
+				</figure>
+			</div>
+		</section>
+	</Container>
+
+	<Container>
 		<section id="how-it-works" class="section reveal">
-			<h2>How it works</h2>
+			<h2><T en="How it works" pt="Como funciona" /></h2>
 			<ol class="grid steps">
 				{steps.map((s, i) => (
 					<li class="step">
 						<span class="step__n">{i + 1}</span>
 						<Icon name={s.icon} width="28" height="28" />
-						<h3>{s.title}</h3>
-						<p>{s.text}</p>
+						<h3><T en={s.title.en} pt={s.title.pt} /></h3>
+						<p><T en={s.text.en} pt={s.text.pt} /></p>
 					</li>
 				))}
 			</ol>
@@ -144,24 +211,24 @@ const jsonLd = {
 
 	<Container>
 		<section id="contact" class="section contact reveal">
-			<h2>Ready to start?</h2>
-			<p>Tell me what you want to achieve and I will suggest a plan.</p>
+			<h2><T en="Ready to start?" pt="Pronto para começar?" /></h2>
+			<p><T en="Tell me what you want to achieve and I will suggest a plan." pt="Conte o que você quer alcançar e eu sugiro um plano." /></p>
 			<div class="contact__grid">
-				<a class="contact__tile" href={waLink} target="_blank" rel="noopener noreferrer">
+				<a class="contact__tile" href={waEn} data-pt-href={waPt} target="_blank" rel="noopener noreferrer">
 					<Icon name="mdi:whatsapp" width="32" height="32" />
 					<span class="contact__label">WhatsApp</span>
 					<span class="contact__value">{settings.whatsappDisplay}</span>
 				</a>
-				<a class="contact__tile" href={mailLink}>
+				<button type="button" class="contact__tile" data-open-booking>
 					<Icon name="mdi:email-outline" width="32" height="32" />
-					<span class="contact__label">Email</span>
-					<span class="contact__value">{settings.email}</span>
-				</a>
+					<span class="contact__label"><T en="Send a message" pt="Enviar mensagem" /></span>
+					<span class="contact__value"><T en="Opens a short form" pt="Abre um formulário curto" /></span>
+				</button>
 			</div>
 		</section>
 	</Container>
 
-	<a class="fab" href={waLink} target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
+	<a class="fab" href={waEn} data-pt-href={waPt} target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp" data-pt-aria-label="Conversar no WhatsApp">
 		<Icon name="mdi:whatsapp" width="28" height="28" />
 	</a>
 </Layout>
@@ -330,6 +397,10 @@ const jsonLd = {
 		margin-top: 1.5rem;
 	}
 	.contact__tile {
+		font: inherit;
+		text-align: left;
+		border: none;
+		cursor: pointer;
 		display: flex;
 		flex-direction: column;
 		align-items: flex-start;
@@ -352,6 +423,41 @@ const jsonLd = {
 	}
 	.contact__value {
 		font-size: var(--font-size-md);
+	}
+
+	.about {
+		display: grid;
+		grid-template-columns: 1fr 1.2fr;
+		gap: 2rem;
+		align-items: center;
+	}
+	.about__photo img {
+		display: block;
+		width: 100%;
+		height: auto;
+		border-radius: var(--theme-shape-radius);
+		object-fit: cover;
+	}
+	.about__page {
+		margin: 1.5rem 0 0;
+		max-width: 18rem;
+		transform: rotate(-2deg);
+		transition: transform var(--theme-transition);
+	}
+	.about__page:hover {
+		transform: rotate(0deg) scale(1.03);
+	}
+	.about__page img {
+		display: block;
+		width: 100%;
+		height: auto;
+		border-radius: 0.5rem;
+		box-shadow: 0 12px 30px rgb(0 0 0 / 0.25);
+	}
+	.about__page figcaption {
+		margin-top: 0.75rem;
+		font-size: var(--font-size-sm);
+		opacity: 0.72;
 	}
 	.fab {
 		position: fixed;
@@ -384,7 +490,8 @@ const jsonLd = {
 			grid-template-columns: 1fr;
 		}
 		.grid,
-		.contact__grid {
+		.contact__grid,
+		.about {
 			grid-template-columns: 1fr;
 		}
 	}

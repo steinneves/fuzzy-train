@@ -1,0 +1,173 @@
+---
+import { Button } from '@components/odyssey-theme';
+import T from './T.astro';
+import settings from '../config/settings.js';
+
+const endpoint = settings.formEndpoint || '';
+const plans = [
+	{ value: 'Single lesson', en: 'Single lesson', pt: 'Aula avulsa' },
+	{ value: 'Lesson package', en: 'Lesson package', pt: 'Pacote de aulas' },
+	{ value: 'Custom package', en: 'Custom package', pt: 'Pacote personalizado' },
+	{ value: 'Not sure yet', en: 'Not sure yet', pt: 'Ainda não sei' },
+];
+---
+
+<dialog id="booking" aria-labelledby="booking-title">
+	<button type="button" class="booking__close" data-close-booking aria-label="Close" data-pt-aria-label="Fechar">&times;</button>
+	<h2 id="booking-title"><T en="Book a lesson" pt="Agendar aula" /></h2>
+	<p><T en="Tell me a bit about what you need." pt="Conte um pouco do que você precisa." /></p>
+
+	<form id="booking-form" data-endpoint={endpoint} data-wa={settings.whatsapp} novalidate={false}>
+		<input type="text" name="_gotcha" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+		<label>
+			<span><T en="Name" pt="Nome" /></span>
+			<input type="text" name="name" required autocomplete="name" />
+		</label>
+		{endpoint && (
+			<label>
+				<span><T en="Email" pt="E-mail" /></span>
+				<input type="email" name="email" required autocomplete="email" />
+			</label>
+		)}
+		<label>
+			<span><T en="Plan" pt="Plano" /></span>
+			<select name="plan">
+				{plans.map((p) => <option value={p.value} data-pt-text={p.pt}>{p.en}</option>)}
+			</select>
+		</label>
+		<label>
+			<span><T en="Message" pt="Mensagem" /></span>
+			<textarea name="message" rows="4" required></textarea>
+		</label>
+		<Button type="submit">
+			{endpoint
+				? <T en="Send message" pt="Enviar mensagem" />
+				: <T en="Continue on WhatsApp" pt="Continuar no WhatsApp" />}
+		</Button>
+		<p class="status" role="status" aria-live="polite">
+			<span data-s="ok"><T en="Thanks! I will get back to you soon." pt="Obrigado! Responderei em breve." /></span>
+			<span data-s="err"><T en="Something went wrong. Please try WhatsApp instead." pt="Algo deu errado. Tente pelo WhatsApp." /></span>
+		</p>
+	</form>
+</dialog>
+
+<script>
+	const dlg = document.getElementById('booking');
+	const form = document.getElementById('booking-form');
+
+	document.addEventListener('click', (e) => {
+		const opener = e.target.closest('[data-open-booking]');
+		if (opener) {
+			e.preventDefault();
+			const plan = opener.dataset.plan;
+			if (plan && form.elements.plan) form.elements.plan.value = plan;
+			form.removeAttribute('data-state');
+			dlg.showModal();
+			return;
+		}
+		if (e.target.closest('[data-close-booking]') || e.target === dlg) dlg.close();
+	});
+
+	form.addEventListener('submit', async (e) => {
+		e.preventDefault();
+		const data = new FormData(form);
+		if (data.get('_gotcha')) return;
+		const endpoint = form.dataset.endpoint;
+		if (!endpoint) {
+			const pt = document.documentElement.getAttribute('data-lang') === 'pt';
+			const text = pt
+				? `Olá! Meu nome é ${data.get('name')}. Plano: ${data.get('plan')}. ${data.get('message')}`
+				: `Hi! I'm ${data.get('name')}. Plan: ${data.get('plan')}. ${data.get('message')}`;
+			window.open(`https://wa.me/${form.dataset.wa}?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
+			dlg.close();
+			form.reset();
+			return;
+		}
+		try {
+			const res = await fetch(endpoint, {
+				method: 'POST',
+				body: data,
+				headers: { Accept: 'application/json' },
+			});
+			form.setAttribute('data-state', res.ok ? 'ok' : 'err');
+			if (res.ok) form.reset();
+		} catch (err) {
+			form.setAttribute('data-state', 'err');
+		}
+	});
+</script>
+
+<style>
+	dialog {
+		width: calc(100% - 2rem);
+		max-width: 32rem;
+		padding: 1.5rem;
+		border: none;
+		border-radius: var(--theme-shape-radius);
+		background-color: var(--theme-bg);
+		color: var(--theme-on-bg);
+		box-shadow: 0 20px 60px rgb(0 0 0 / 0.35);
+	}
+	dialog::backdrop {
+		background: rgb(0 0 0 / 0.55);
+	}
+	dialog h2 {
+		margin-top: 0;
+	}
+	.booking__close {
+		position: absolute;
+		top: 0.75rem;
+		right: 1rem;
+		border: none;
+		background: transparent;
+		color: inherit;
+		font-size: 2rem;
+		line-height: 1;
+		cursor: pointer;
+	}
+	form {
+		display: grid;
+		gap: 1rem;
+	}
+	label {
+		display: grid;
+		gap: 0.25rem;
+		font-weight: 700;
+		font-size: var(--font-size-sm);
+	}
+	input,
+	select,
+	textarea {
+		width: 100%;
+		padding: 0.6rem 0.8rem;
+		border: 2px solid var(--theme-surface-2);
+		border-radius: 0.75rem;
+		background-color: var(--theme-bg);
+		color: var(--theme-on-bg);
+		font: inherit;
+		font-weight: 400;
+	}
+	input:focus,
+	select:focus,
+	textarea:focus {
+		border-color: var(--theme-primary);
+	}
+	.hp {
+		position: absolute;
+		left: -9999px;
+		width: 1px;
+		height: 1px;
+		opacity: 0;
+	}
+	.status span {
+		display: none;
+	}
+	form[data-state='ok'] [data-s='ok'],
+	form[data-state='err'] [data-s='err'] {
+		display: inline;
+	}
+	.status {
+		margin: 0;
+		min-height: 1.5rem;
+	}
+</style>

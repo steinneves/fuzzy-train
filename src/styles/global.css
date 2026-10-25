@@ -1,6 +1,9 @@
-html,
-body {
+html {
 	height: 100%;
+}
+
+body {
+	min-height: 100%;
 }
 
 body {
@@ -35,7 +38,15 @@ html {
 	position: sticky;
 	top: 0;
 	z-index: 90;
+	padding: 0.75rem clamp(1rem, 3vw, 2rem);
 	background-color: var(--theme-bg);
+	box-shadow: 0 1px 0 rgb(0 0 0 / 0.08);
+}
+
+/* Language switching: both texts are in the page, only one is shown */
+html[data-lang='pt'] [data-t='en'],
+html:not([data-lang='pt']) [data-t='pt'] {
+	display: none !important;
 }
 @media (prefers-reduced-motion: reduce) {
 	html {

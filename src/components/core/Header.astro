@@ -1,5 +1,6 @@
 ---
 import { Icon } from 'astro-icon/components'
+import T from '../T.astro';
 const { navData, rightMenu } = Astro.props;
 ---
 
@@ -59,7 +60,7 @@ const { navData, rightMenu } = Astro.props;
       {navData && <nav>
         <ul>
           {navData.map(navItem => (
-            (<li><a href={navItem.slug} >{navItem.title}</a></li>)
+            (<li><a href={navItem.slug} ><T en={navItem.title} pt={navItem.titlePt} /></a></li>)
           ))}
         </ul>
       </nav>}
