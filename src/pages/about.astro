@@ -1,10 +1,13 @@
 ---
-import { Container } from '@components/odyssey-theme';
+import { Icon } from 'astro-icon/components';
+import { Container, Button } from '@components/odyssey-theme';
 import Layout from '../layouts/Page.astro';
 import T from '../components/T.astro';
 import VideoEmbed from '../components/VideoEmbed.astro';
 import CtaSection from '../components/CtaSection.astro';
 import ExploreSection from '../components/ExploreSection.astro';
+import Greeting from '../components/Greeting.astro';
+import { waEn, waPt } from '../config/links.js';
 import content from '../config/content.js';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
@@ -14,10 +17,56 @@ const seo = {
 	description: 'How lessons work with Stein Tutoring, and what a lesson looks like.',
 };
 
-const photo = content.photo ? `${base}/${content.photo.replace(/^\//, '')}` : '';
+// Portrait and intro: placeholders are shown until you fill in src/config/content.js
+const photo = content.photo
+	? `${base}/${content.photo.replace(/^\//, '')}`
+	: `${base}/assets/images/about/tutor-filler.jpg`;
+const intro = {
+	en: content.intro.en || "Hi, I'm Stein. I plan every lesson around your goals, level and schedule.",
+	pt: content.intro.pt || 'Olá, eu sou Stein. Planejo cada aula em torno dos seus objetivos, nível e rotina.',
+};
 const hasBio = content.bio.en.length > 0 || content.bio.pt.length > 0;
 const hasVideo = Boolean(content.video.en || content.video.pt);
-const showBio = Boolean(photo) || hasBio || hasVideo;
+const showBio = hasBio || hasVideo;
+
+const chips = [
+	{ icon: 'mdi:translate', en: 'English · Portuguese', pt: 'Inglês · Português' },
+	{ icon: 'mdi:account-voice', en: 'One-on-one', pt: 'Aulas individuais' },
+	{ icon: 'mdi:tune-variant', en: 'Custom packages', pt: 'Pacotes personalizados' },
+];
+
+const stats = [
+	{ big: { en: '2', pt: '2' }, label: { en: 'Languages taught', pt: 'Idiomas ensinados' } },
+	{ big: { en: '1-on-1', pt: '1 a 1' }, label: { en: 'Every lesson', pt: 'Todas as aulas' } },
+	{ big: { en: 'Free', pt: 'Grátis' }, label: { en: 'Trial lesson', pt: 'Aula experimental' } },
+];
+
+const pillars = [
+	{
+		icon: 'mdi:target',
+		title: { en: 'Built around you', pt: 'Feito sob medida' },
+		text: {
+			en: 'Every plan starts from your goals, level and schedule.',
+			pt: 'Todo plano parte dos seus objetivos, nível e rotina.',
+		},
+	},
+	{
+		icon: 'mdi:chat-processing-outline',
+		title: { en: 'Real-life practice', pt: 'Prática da vida real' },
+		text: {
+			en: 'We practice situations you will actually face.',
+			pt: 'Praticamos situações que você realmente vai enfrentar.',
+		},
+	},
+	{
+		icon: 'mdi:trending-up',
+		title: { en: 'Steady feedback', pt: 'Feedback constante' },
+		text: {
+			en: 'Clear corrections and a next step after every lesson.',
+			pt: 'Correções claras e um próximo passo depois de cada aula.',
+		},
+	},
+];
 
 const steps = [
 	{
@@ -57,16 +106,48 @@ const steps = [
 
 <Layout seo={seo}>
 	<Container>
-		<h1 class="page-title"><T en="About" pt="Sobre" /></h1>
-		<p><T en="Lessons planned for you, one student at a time." pt="Aulas planejadas para você, um aluno de cada vez." /></p>
+		<section class="about-hero">
+			<div class="about-hero__text">
+				<Greeting />
+				<h1><T en="About me" pt="Sobre mim" /></h1>
+				<p class="about-hero__lead"><T en={intro.en} pt={intro.pt} /></p>
+				<ul class="chips" aria-label="Highlights" data-pt-aria-label="Destaques">
+					{chips.map((c) => (
+						<li class="chip"><Icon name={c.icon} width="18" height="18" /> <T en={c.en} pt={c.pt} /></li>
+					))}
+				</ul>
+				<div class="btn-row">
+					<Button type="button" data-open-booking><T en="Book a lesson" pt="Agendar aula" /></Button>
+					<Button href={waEn} data-pt-href={waPt} data-wa newTab customIcon>
+						<T en="Message on WhatsApp" pt="Chamar no WhatsApp" />
+						<Fragment slot="icon"><Icon name="mdi:whatsapp" width="20" height="20" /></Fragment>
+					</Button>
+				</div>
+			</div>
+			<div class="portrait">
+				<img src={photo} alt="Your tutor" data-pt-alt="Seu tutor" width="900" height="1100" fetchpriority="high" />
+			</div>
+		</section>
 	</Container>
+
+	<div class="band band--tint">
+		<Container>
+			<section class="section reveal">
+				<div class="stats">
+					{stats.map((st) => (
+						<div class="stat">
+							<strong><T en={st.big.en} pt={st.big.pt} /></strong>
+							<span><T en={st.label.en} pt={st.label.pt} /></span>
+						</div>
+					))}
+				</div>
+			</section>
+		</Container>
+	</div>
 
 	{showBio && (
 		<Container>
-			<section class:list={['section', 'about-bio', 'reveal', { 'about-bio--solo': !photo }]}>
-				{photo && (
-					<img class="about-bio__photo" src={photo} alt="Your tutor" data-pt-alt="Seu tutor" width="900" height="1100" loading="lazy" />
-				)}
+			<section class="section about-bio about-bio--solo reveal">
 				<div>
 					<h2><T en="About me" pt="Sobre mim" /></h2>
 					{content.bio.en.length > 0 && (
@@ -82,10 +163,27 @@ const steps = [
 		</Container>
 	)}
 
+	<div class="band band--tint">
+		<Container>
+			<section class="section reveal">
+				<h2 class="section-title"><T en="How I teach" pt="Como eu ensino" /></h2>
+				<div class="grid">
+					{pillars.map((p) => (
+						<article class="card">
+							<span class="icon-circle"><Icon name={p.icon} width="24" height="24" /></span>
+							<h3><T en={p.title.en} pt={p.title.pt} /></h3>
+							<p><T en={p.text.en} pt={p.text.pt} /></p>
+						</article>
+					))}
+				</div>
+			</section>
+		</Container>
+	</div>
+
 	<Container>
 		<section id="lesson" class="section lesson reveal">
 			<div>
-				<h2><T en="What a lesson looks like" pt="Como é uma aula" /></h2>
+				<h2 class="section-title lesson__title"><T en="What a lesson looks like" pt="Como é uma aula" /></h2>
 				<p><T en="A typical 60-minute lesson." pt="Uma aula típica de 60 minutos." /></p>
 				<ol class="timeline">
 					{steps.map((st) => (
