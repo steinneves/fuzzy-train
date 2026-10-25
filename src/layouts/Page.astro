@@ -5,6 +5,7 @@ import type { Props as BaseHeadProps } from '../components/head/BaseHead.astro';
 import Logo from '../components/Logo.astro';
 import LangToggle from '../components/LangToggle.astro';
 import BookingModal from '../components/BookingModal.astro';
+import LanguageChooser from '../components/LanguageChooser.astro';
 import T from '../components/T.astro';
 import settings from '../config/settings';
 import { footerLists, footerSocials } from '../config/footer';
@@ -31,6 +32,7 @@ const { seo } = Astro.props as Props;
 	<div id="page">
 		<slot />
 	</div>
+	<LanguageChooser />
 	<BookingModal />
 	<Footer
 		slot="footer"

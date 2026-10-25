@@ -1,0 +1,23 @@
+---
+// Round flag icons drawn inline so they render on every device (no emoji dependency).
+const { code, size = 22 } = Astro.props;
+const stripes = Array.from({ length: 13 }, (_, i) => i).filter((i) => i % 2 === 0);
+const stars = [];
+for (let r = 0; r < 3; r++) for (let c = 0; c < 4; c++) stars.push([1.6 + c * 2.6, 1.8 + r * 3.3]);
+---
+
+{code === 'us' ? (
+	<svg viewBox="0 0 24 24" width={size} height={size} aria-hidden="true" style="display:block;border-radius:50%;overflow:hidden;flex:none">
+		<rect width="24" height="24" fill="#fff" />
+		{stripes.map((i) => <rect x="0" y={(i * 24) / 13} width="24" height={24 / 13} fill="#b22234" />)}
+		<rect width="11" height={(7 * 24) / 13} fill="#3c3b6e" />
+		{stars.map(([x, y]) => <circle cx={x} cy={y} r="0.6" fill="#fff" />)}
+	</svg>
+) : (
+	<svg viewBox="0 0 24 24" width={size} height={size} aria-hidden="true" style="display:block;border-radius:50%;overflow:hidden;flex:none">
+		<rect width="24" height="24" fill="#009b3a" />
+		<polygon points="12,3.5 21.5,12 12,20.5 2.5,12" fill="#ffdf00" />
+		<circle cx="12" cy="12" r="4.6" fill="#002776" />
+		<path d="M7.6 11.2 Q12 9.4 16.4 13" stroke="#fff" stroke-width="0.9" fill="none" />
+	</svg>
+)}

@@ -20,16 +20,32 @@ const image = new URL(Astro.props.image || `${import.meta.env.BASE_URL}/social.p
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width" />
 <link rel="icon" type="image/png" href={`${import.meta.env.BASE_URL}/favicon.png`.replace(/\/\//g, '/')} />
-<!-- Language bootstrap (runs before paint): saved choice, else browser language -->
+<!-- Language bootstrap (runs before paint).
+     Saved choice or ?lang=pt|en wins. Otherwise we guess from browser language and time zone
+     (so Brazilians with an English browser are still detected) and show the chooser. -->
 <script is:inline>
 	(function () {
+		var root = document.documentElement;
 		try {
-			var l = localStorage.getItem('lang');
-			if (l !== 'pt' && l !== 'en') {
-				l = (navigator.language || '').toLowerCase().indexOf('pt') === 0 ? 'pt' : 'en';
-			}
-			document.documentElement.setAttribute('data-lang', l);
-			document.documentElement.lang = l === 'pt' ? 'pt-BR' : 'en';
+			var valid = function (v) { return v === 'pt' || v === 'en'; };
+			var qs = new URLSearchParams(location.search).get('lang');
+			if (valid(qs)) { try { localStorage.setItem('lang', qs); } catch (e) {} }
+			var saved = null;
+			try { saved = localStorage.getItem('lang'); } catch (e) {}
+			var chosen = valid(qs) ? qs : valid(saved) ? saved : null;
+
+			var br = ['America/Sao_Paulo','America/Bahia','America/Fortaleza','America/Recife','America/Belem','America/Manaus','America/Cuiaba','America/Campo_Grande','America/Porto_Velho','America/Boa_Vista','America/Rio_Branco','America/Araguaina','America/Maceio','America/Santarem','America/Noronha','America/Eirunepe'];
+			var langs = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || ''];
+			var ptBrowser = langs.some(function (x) { return String(x).toLowerCase().indexOf('pt') === 0; });
+			var tz = '';
+			try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (e) {}
+			var guess = ptBrowser || br.indexOf(tz) !== -1 ? 'pt' : 'en';
+
+			var lang = chosen || guess;
+			root.setAttribute('data-lang', lang);
+			root.setAttribute('data-guess', guess);
+			root.lang = lang === 'pt' ? 'pt-BR' : 'en';
+			if (!chosen) root.setAttribute('data-chooser', '');
 		} catch (e) {}
 	})();
 </script>

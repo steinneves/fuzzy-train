@@ -1,0 +1,111 @@
+---
+import Flag from './Flag.astro';
+import Logo from './Logo.astro';
+---
+
+<dialog id="chooser" aria-labelledby="chooser-title">
+	<div class="chooser__logo"><Logo /></div>
+	<h2 id="chooser-title">Choose your language <span>·</span> Escolha seu idioma</h2>
+	<div class="chooser__grid">
+		<button type="button" class="chooser__card" data-choose="pt" lang="pt">
+			<Flag code="br" size={48} />
+			<strong>Quero aprender inglês</strong>
+			<span>Aulas de inglês, explicadas em português</span>
+		</button>
+		<button type="button" class="chooser__card" data-choose="en" lang="en">
+			<Flag code="us" size={48} />
+			<strong>I want to learn Portuguese</strong>
+			<span>Portuguese lessons, explained in English</span>
+		</button>
+	</div>
+</dialog>
+
+<script is:inline>
+	(function () {
+		var root = document.documentElement;
+		var dlg = document.getElementById('chooser');
+		if (!root.hasAttribute('data-chooser') || !dlg || !dlg.showModal) return;
+		dlg.showModal();
+		var g = root.getAttribute('data-guess') === 'pt' ? 'pt' : 'en';
+		var suggested = dlg.querySelector('[data-choose="' + g + '"]');
+		if (suggested) { suggested.setAttribute('data-suggested', ''); suggested.focus(); }
+		dlg.addEventListener('close', function () { root.removeAttribute('data-chooser'); });
+		dlg.querySelectorAll('[data-choose]').forEach(function (b) {
+			b.addEventListener('click', function () {
+				var l = b.getAttribute('data-choose');
+				try { localStorage.setItem('lang', l); } catch (e) {}
+				root.setAttribute('data-lang', l);
+				root.lang = l === 'pt' ? 'pt-BR' : 'en';
+				if (window.__applyLang) window.__applyLang(l);
+				dlg.close();
+			});
+		});
+	})();
+</script>
+
+<style>
+	dialog {
+		width: calc(100% - 2rem);
+		max-width: 38rem;
+		padding: 2rem 1.5rem;
+		border: none;
+		border-radius: var(--theme-shape-radius);
+		background-color: var(--theme-bg);
+		color: var(--theme-on-bg);
+		box-shadow: 0 20px 60px rgb(0 0 0 / 0.35);
+		text-align: center;
+	}
+	dialog::backdrop {
+		background: rgb(0 0 0 / 0.7);
+	}
+	.chooser__logo {
+		display: flex;
+		justify-content: center;
+		margin-bottom: 0.5rem;
+	}
+	h2 {
+		margin: 0 0 1.5rem;
+		font-size: var(--font-size-md);
+	}
+	h2 span {
+		opacity: 0.5;
+	}
+	.chooser__grid {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 1rem;
+	}
+	.chooser__card {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 1.25rem 1rem;
+		border: 2px solid var(--theme-surface-2);
+		border-radius: var(--theme-shape-radius);
+		background-color: var(--theme-surface-1);
+		color: var(--theme-on-surface-1);
+		font: inherit;
+		cursor: pointer;
+		transition: transform var(--theme-transition), border-color var(--theme-transition);
+	}
+	.chooser__card strong {
+		font-size: var(--font-size-base);
+	}
+	.chooser__card span {
+		font-size: var(--font-size-sm);
+		opacity: 0.75;
+	}
+	.chooser__card:hover,
+	.chooser__card[data-suggested] {
+		border-color: var(--theme-primary);
+	}
+	.chooser__card:hover {
+		transform: translateY(-3px);
+	}
+	@media (max-width: 520px) {
+		.chooser__grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

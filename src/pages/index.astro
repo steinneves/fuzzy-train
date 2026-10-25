@@ -8,12 +8,15 @@ import settings from '../config/settings.js';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 const wa = (msg) => `https://wa.me/${settings.whatsapp}?text=${encodeURIComponent(msg)}`;
-const waEn = wa("Hi! I'd like to book an English lesson.");
+const waEn = wa("Hi! I'd like to book a Portuguese lesson.");
 const waPt = wa('Olá! Gostaria de agendar uma aula de inglês.');
+
+const usd = `US$${settings.priceUsd}`;
+const brl = `R$${settings.priceBrl}`;
 
 const chips = [
 	{ icon: 'mdi:account-voice', en: 'One-on-one', pt: 'Aulas individuais' },
-	{ icon: 'mdi:clock-outline', en: 'R$80 / hour', pt: 'R$80 / hora' },
+	{ icon: 'mdi:clock-outline', en: `${usd} / hour`, pt: `${brl} / hora` },
 	{ icon: 'mdi:tune-variant', en: 'Custom packages', pt: 'Pacotes personalizados' },
 ];
 
@@ -22,7 +25,7 @@ const packages = [
 		icon: 'mdi:clock-outline',
 		plan: 'Single lesson',
 		name: { en: 'Single lesson', pt: 'Aula avulsa' },
-		price: { en: 'R$80', pt: 'R$80' },
+		price: { en: usd, pt: brl },
 		unit: { en: 'per hour', pt: 'por hora' },
 		text: {
 			en: 'Try one hour with no commitment. A good way to meet, set a baseline and decide how to continue.',
@@ -33,7 +36,7 @@ const packages = [
 		icon: 'mdi:calendar-check-outline',
 		plan: 'Lesson package',
 		name: { en: 'Lesson package', pt: 'Pacote de aulas' },
-		price: { en: 'R$80', pt: 'R$80' },
+		price: { en: usd, pt: brl },
 		unit: { en: 'per hour', pt: 'por hora' },
 		text: {
 			en: 'A block of hours with a steady weekly rhythm, so you build momentum and keep it.',
@@ -47,7 +50,7 @@ const packages = [
 		price: { en: 'Tailored', pt: 'Sob medida' },
 		unit: { en: 'built around you', pt: 'feito para você' },
 		text: {
-			en: 'Job interviews, travel, exams, conversation or business English. Content and schedule designed for your goal.',
+			en: 'Travel, moving to Brazil, work, conversation or exam prep. Content and schedule designed for your goal.',
 			pt: 'Entrevistas de emprego, viagens, provas, conversação ou inglês para negócios. Conteúdo e horários planejados para o seu objetivo.',
 		},
 		featured: true,
@@ -60,7 +63,7 @@ const steps = [
 		icon: 'mdi:chat-processing-outline',
 		title: { en: 'Tell me your goal', pt: 'Conte seu objetivo' },
 		text: {
-			en: 'Send me a message with what you want to use English for.',
+			en: 'Send me a message with what you want to use Portuguese for.',
 			pt: 'Envie uma mensagem dizendo para que você quer usar o inglês.',
 		},
 	},
@@ -82,22 +85,18 @@ const steps = [
 	},
 ];
 
+const provider = { '@type': 'Organization', name: settings.name, url: settings.url };
+const offer = (price, currency) => ({
+	'@type': 'Offer',
+	priceCurrency: currency,
+	priceSpecification: { '@type': 'UnitPriceSpecification', price, priceCurrency: currency, unitText: 'HOUR' },
+});
 const jsonLd = {
 	'@context': 'https://schema.org',
-	'@type': 'Service',
-	name: 'ESL tutoring',
-	serviceType: 'English as a Second Language lessons',
-	provider: { '@type': 'Organization', name: settings.name, url: settings.url },
-	offers: {
-		'@type': 'Offer',
-		priceCurrency: 'BRL',
-		priceSpecification: {
-			'@type': 'UnitPriceSpecification',
-			price: 80,
-			priceCurrency: 'BRL',
-			unitText: 'HOUR',
-		},
-	},
+	'@graph': [
+		{ '@type': 'Service', name: 'English lessons for Brazilians', serviceType: 'English as a Second Language lessons', provider, offers: offer(settings.priceBrl, 'BRL') },
+		{ '@type': 'Service', name: 'Portuguese lessons for foreigners', serviceType: 'Portuguese language lessons', provider, offers: offer(settings.priceUsd, 'USD') },
+	],
 };
 ---
 
@@ -107,12 +106,12 @@ const jsonLd = {
 	<Container>
 		<section class="hero">
 			<div class="hero__text">
-				<p class="eyebrow"><T en="ESL tutoring" pt="Aulas de inglês (ESL)" /></p>
-				<h1><T en="English lessons built around you" pt="Aulas de inglês feitas sob medida para você" /></h1>
+				<p class="eyebrow"><T en="Portuguese tutoring" pt="Aulas de inglês" /></p>
+				<h1><T en="Portuguese lessons built around you" pt="Aulas de inglês feitas sob medida para você" /></h1>
 				<p>
 					<T
-						en="One-on-one ESL tutoring with lesson packages designed for your goals, schedule and level. R$80 per hour."
-						pt="Aulas particulares de inglês com pacotes pensados para seus objetivos, sua rotina e seu nível. R$80 por hora."
+						en={`One-on-one Portuguese tutoring with lesson packages designed for your goals, schedule and level. ${usd} per hour.`}
+						pt={`Aulas particulares de inglês com pacotes pensados para seus objetivos, sua rotina e seu nível. ${brl} por hora.`}
 					/>
 				</p>
 				<ul class="chips" aria-label="Highlights" data-pt-aria-label="Destaques">

@@ -6,7 +6,7 @@ import settings from '../config/settings.js';
 
 const endpoint = settings.formEndpoint || '';
 const wa = (msg) => `https://wa.me/${settings.whatsapp}?text=${encodeURIComponent(msg)}`;
-const waEn = wa("Hi! I'd like to book an English lesson.");
+const waEn = wa("Hi! I'd like to book a Portuguese lesson.");
 const waPt = wa('Olá! Gostaria de agendar uma aula de inglês.');
 const plans = [
 	{ value: 'Single lesson', en: 'Single lesson', pt: 'Aula avulsa' },
