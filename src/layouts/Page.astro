@@ -49,6 +49,20 @@ const { seo } = Astro.props as Props;
 	</Footer>
 </Layout>
 
+<script is:inline>
+	// On reload, always start at the top. Without this the browser restores the old scroll
+	// position (or jumps to a #packages hash left by the nav link) and the page lands mid-way.
+	(function () {
+		var nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+		if (!nav || nav.type !== 'reload') return;
+		try { history.scrollRestoration = 'manual'; } catch (e) {}
+		if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+		var top = function () { window.scrollTo({ top: 0, left: 0, behavior: 'instant' }); };
+		top();
+		window.addEventListener('load', top);
+	})();
+</script>
+
 <script>
 	// Scroll-reveal for sections marked .reveal (content stays visible without JS).
 	document.documentElement.classList.add('js');
