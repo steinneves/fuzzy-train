@@ -2,6 +2,10 @@
 import { Icon } from 'astro-icon/components'
 import T from '../T.astro';
 const { navData, rightMenu } = Astro.props;
+// Highlight the link for the current page (hash links like /#packages are never "current").
+const clean = (p) => p.replace(/\/+$/, '');
+const here = clean(Astro.url.pathname);
+const isCurrent = (slug) => !slug.includes('#') && clean(slug) === here;
 ---
 
 <script type="module">
@@ -60,7 +64,7 @@ const { navData, rightMenu } = Astro.props;
       {navData && <nav>
         <ul>
           {navData.map(navItem => (
-            (<li><a href={navItem.slug} ><T en={navItem.title} pt={navItem.titlePt} /></a></li>)
+            (<li><a href={navItem.slug} aria-current={isCurrent(navItem.slug) ? 'page' : undefined}><T en={navItem.title} pt={navItem.titlePt} /></a></li>)
           ))}
         </ul>
       </nav>}
@@ -118,16 +122,26 @@ const { navData, rightMenu } = Astro.props;
     padding: 0;
     list-style: none;
     display: flex;
+    gap: 0.35rem;
   }
   nav ul li a {
+    display: inline-block;
     text-decoration: none;
-    margin-right: 1rem;
+    padding: 0.45rem 1rem;
+    border: 1.5px solid transparent;
+    border-radius: 3rem;
     color: inherit;
-    opacity: 0.72;
-    transition: opacity linear 150ms;
+    font-weight: 700;
+    transition: background-color 150ms, border-color 150ms, color 150ms;
   }
   nav ul li a:hover {
-    opacity: 1;
+    background-color: var(--theme-surface-2);
+    border-color: rgb(0 0 0 / 0.25);
+  }
+  nav ul li a[aria-current='page'] {
+    background-color: var(--theme-primary);
+    border-color: var(--theme-primary);
+    color: var(--theme-on-primary);
   }
   @media(max-width: 860px) {
     #menuButton {
@@ -153,9 +167,11 @@ const { navData, rightMenu } = Astro.props;
       align-items: center;
       flex-direction: column;
     }
+     header[mobile-menu-open] nav ul {
+       gap: 0.75rem;
+     }
      header[mobile-menu-open] nav ul li {
        font-size: var(--font-size-lg);
-       margin-bottom: 1rem;
      }
   }
 </style>
