@@ -5,6 +5,7 @@ import Layout from '../layouts/Page.astro';
 import T from '../components/T.astro';
 import CtaSection from '../components/CtaSection.astro';
 import Testimonials from '../components/Testimonials.astro';
+import ExploreSection from '../components/ExploreSection.astro';
 import settings from '../config/settings.js';
 import { waEn, waPt } from '../config/links.js';
 
@@ -141,10 +142,29 @@ const jsonLd = {
 		</section>
 	</Container>
 
+	<div class="band band--tint">
+	<Container>
+		<section id="how-it-works" class="section reveal">
+			<h2 class="section-title"><T en="How it works" pt="Como funciona" /></h2>
+			<ol class="grid steps">
+				{steps.map((s, i) => (
+					<li class="step">
+						<span class="step__n">{i + 1}</span>
+						<Icon name={s.icon} width="28" height="28" />
+						<h3><T en={s.title.en} pt={s.title.pt} /></h3>
+						<p><T en={s.text.en} pt={s.text.pt} /></p>
+					</li>
+				))}
+			</ol>
+		</section>
+	</Container>
+	</div>
+
+	<div class="band">
 	<Container>
 		<section id="packages" class="section reveal">
-			<h2><T en="Lesson packages" pt="Pacotes de aulas" /></h2>
-			<p><T en="Every student is different, so every package can be adjusted." pt="Cada aluno é diferente, então todo pacote pode ser ajustado." /></p>
+			<h2 class="section-title"><T en="Lesson packages" pt="Pacotes de aulas" /></h2>
+			<p class="section-intro"><T en="Every student is different, so every package can be adjusted." pt="Cada aluno é diferente, então todo pacote pode ser ajustado." /></p>
 			<div class="grid">
 				{packages.map((p) => (
 					<article class:list={['card', { 'card--featured': p.featured }]}>
@@ -161,25 +181,11 @@ const jsonLd = {
 			</div>
 		</section>
 	</Container>
+	</div>
 
 	<Testimonials />
 
-	<Container>
-		<section id="how-it-works" class="section reveal">
-			<h2><T en="How it works" pt="Como funciona" /></h2>
-			<ol class="grid steps">
-				{steps.map((s, i) => (
-					<li class="step">
-						<span class="step__n">{i + 1}</span>
-						<Icon name={s.icon} width="28" height="28" />
-						<h3><T en={s.title.en} pt={s.title.pt} /></h3>
-						<p><T en={s.text.en} pt={s.text.pt} /></p>
-					</li>
-				))}
-			</ol>
-		</section>
-	</Container>
-
+	<div class="band">
 	<Container>
 		<section class="section callout reveal">
 			<div>
@@ -189,6 +195,9 @@ const jsonLd = {
 			<Button href={`${base}/level-check/`}><T en="Take the level check" pt="Fazer o teste de nível" /></Button>
 		</section>
 	</Container>
+	</div>
+
+	<ExploreSection exclude={['packages', 'level-check']} />
 
 	<CtaSection />
 </Layout>

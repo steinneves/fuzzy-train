@@ -1,0 +1,59 @@
+---
+import { Icon } from 'astro-icon/components';
+import { Container } from '@components/odyssey-theme';
+import T from './T.astro';
+
+// exclude: ids of cards to leave out (e.g. the page you are already on)
+const { exclude = [] } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const all = [
+	{
+		id: 'packages',
+		icon: 'mdi:package-variant-closed',
+		href: `${base}/#packages`,
+		title: { en: 'Packages', pt: 'Pacotes' },
+		text: { en: 'See prices and lesson packages.', pt: 'Veja preços e pacotes de aulas.' },
+	},
+	{
+		id: 'about',
+		icon: 'mdi:account-outline',
+		href: `${base}/about/`,
+		title: { en: 'About', pt: 'Sobre' },
+		text: { en: 'See what a lesson looks like.', pt: 'Veja como é uma aula.' },
+	},
+	{
+		id: 'level-check',
+		icon: 'mdi:clipboard-check-outline',
+		href: `${base}/level-check/`,
+		title: { en: 'Level check', pt: 'Teste de nível' },
+		text: { en: 'Estimate your level in two minutes.', pt: 'Estime seu nível em dois minutos.' },
+	},
+	{
+		id: 'faq',
+		icon: 'mdi:help-circle-outline',
+		href: `${base}/faq/`,
+		title: { en: 'FAQ', pt: 'Dúvidas' },
+		text: { en: 'Answers to common questions.', pt: 'Respostas para as dúvidas mais comuns.' },
+	},
+];
+const items = all.filter((i) => !exclude.includes(i.id));
+---
+
+<div class="band band--tint">
+	<Container>
+		<section class="section reveal">
+			<h2 class="section-title"><T en="Keep exploring" pt="Continue explorando" /></h2>
+			<div class="explore">
+				{items.map((i) => (
+					<a class="explore__card" href={i.href}>
+						<span class="icon-circle"><Icon name={i.icon} width="24" height="24" /></span>
+						<strong><T en={i.title.en} pt={i.title.pt} /></strong>
+						<span class="explore__text"><T en={i.text.en} pt={i.text.pt} /></span>
+						<Icon name="mdi:arrow-right" width="20" height="20" />
+					</a>
+				))}
+			</div>
+		</section>
+	</Container>
+</div>

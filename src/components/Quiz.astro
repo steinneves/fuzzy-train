@@ -31,7 +31,6 @@ import quiz from '../config/quiz.js';
 			const wrap = el('div', 'quiz__result');
 			wrap.append(
 				el('p', 'quiz__progress', d.ui.title),
-				el('p', 'quiz__code', level.code),
 				el('p', 'quiz__name', level.name),
 				el('p', '', level.desc),
 				el('p', 'quiz__note', d.ui.score.replace('{s}', state.score).replace('{n}', n)),
@@ -41,7 +40,7 @@ import quiz from '../config/quiz.js';
 			const book = el('button', 'pill-btn', d.ui.cta);
 			book.type = 'button';
 			book.setAttribute('data-open-booking', '');
-			const msg = d.ui.msg.replace('{code}', level.code).replace('{name}', level.name);
+			const msg = d.ui.msg.replace('{name}', level.name);
 			book.dataset.msgEn = msg;
 			book.dataset.msgPt = msg;
 			const again = el('button', 'pill-btn pill-btn--outline', d.ui.retake);

@@ -10,9 +10,10 @@ const img = (p) => (/^https?:/.test(p) ? p : `${base}/${p.replace(/^\//, '')}`);
 ---
 
 {items.length > 0 && (
+	<div class="band band--tint">
 	<Container>
 		<section id="testimonials" class="section reveal">
-			<h2><T en="What students say" pt="O que os alunos dizem" /></h2>
+			<h2 class="section-title"><T en="What students say" pt="O que os alunos dizem" /></h2>
 			<div class="grid">
 				{items.map((t) => (
 					<figure class="quote" data-t={t.lang === 'pt' ? 'pt' : 'en'}>
@@ -27,4 +28,5 @@ const img = (p) => (/^https?:/.test(p) ? p : `${base}/${p.replace(/^\//, '')}`);
 			</div>
 		</section>
 	</Container>
+	</div>
 )}

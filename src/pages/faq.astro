@@ -3,6 +3,7 @@ import { Container } from '@components/odyssey-theme';
 import Layout from '../layouts/Page.astro';
 import T from '../components/T.astro';
 import CtaSection from '../components/CtaSection.astro';
+import ExploreSection from '../components/ExploreSection.astro';
 import settings from '../config/settings.js';
 
 const seo = {
@@ -76,7 +77,7 @@ const faqs = [
 
 <Layout seo={seo}>
 	<Container>
-		<h1 class="page-title"><T en="Frequently asked questions" pt="Perguntas frequentes" /></h1>
+		<h1 class="page-title text-center"><T en="Frequently asked questions" pt="Perguntas frequentes" /></h1>
 		<div class="faq section">
 			{faqs.map((f) => (
 				<details>
@@ -87,5 +88,6 @@ const faqs = [
 		</div>
 	</Container>
 
+	<ExploreSection exclude={['faq']} />
 	<CtaSection />
 </Layout>

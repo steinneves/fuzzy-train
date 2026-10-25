@@ -1,7 +1,7 @@
 // Level-check questions. Key = interface language:
 //   pt -> Brazilian students taking an ENGLISH check (UI in Portuguese)
 //   en -> foreign students taking a PORTUGUESE check (UI in English)
-// "answer" is the index of the correct option. Level cut-offs are the "max" score of each level.
+// "answer" is the index of the correct option. A level applies while score <= its "max".
 export default {
  "pt": {
   "ui": {
@@ -11,36 +11,31 @@ export default {
    "note": "É uma estimativa rápida, não uma certificação. Na aula experimental avaliamos seu nível com mais detalhe.",
    "cta": "Agendar aula experimental",
    "retake": "Refazer o teste",
-   "msg": "Tenho interesse em agendar uma aula experimental. No teste de nível, meu resultado estimado foi {code} ({name})."
+   "msg": "Tenho interesse em agendar uma aula experimental. No teste de nível, meu resultado estimado foi: {name}."
   },
   "levels": [
    {
     "max": 1,
-    "code": "A1",
     "name": "Iniciante",
     "desc": "Você está começando. Vamos construir uma base sólida."
    },
    {
     "max": 3,
-    "code": "A2",
     "name": "Básico",
     "desc": "Você entende o essencial. Vamos ganhar confiança para conversar."
    },
    {
     "max": 5,
-    "code": "B1",
     "name": "Intermediário",
     "desc": "Você já se vira. Vamos ampliar vocabulário e fluência."
    },
    {
     "max": 7,
-    "code": "B2",
     "name": "Intermediário avançado",
     "desc": "Você tem uma boa base. Vamos refinar precisão e naturalidade."
    },
    {
     "max": 8,
-    "code": "C1",
     "name": "Avançado",
     "desc": "Seu nível é alto. Vamos polir detalhes e situações específicas."
    }
@@ -136,36 +131,31 @@ export default {
    "note": "This is a quick estimate, not a certification. In the trial lesson we assess your level in more detail.",
    "cta": "Book a trial lesson",
    "retake": "Retake the check",
-   "msg": "I'm interested in booking a trial lesson. My estimated level from the level check is {code} ({name})."
+   "msg": "I'm interested in booking a trial lesson. My estimated level from the level check is: {name}."
   },
   "levels": [
    {
     "max": 1,
-    "code": "A1",
     "name": "Beginner",
     "desc": "You are just starting. We will build a solid foundation."
    },
    {
     "max": 3,
-    "code": "A2",
     "name": "Elementary",
     "desc": "You understand the basics. We will build confidence to hold conversations."
    },
    {
     "max": 5,
-    "code": "B1",
     "name": "Intermediate",
     "desc": "You can get by. We will widen vocabulary and fluency."
    },
    {
     "max": 7,
-    "code": "B2",
     "name": "Upper-intermediate",
     "desc": "You have a strong base. We will refine accuracy and natural expression."
    },
    {
     "max": 8,
-    "code": "C1",
     "name": "Advanced",
     "desc": "Your level is high. We will polish details and specific situations."
    }

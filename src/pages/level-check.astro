@@ -4,6 +4,7 @@ import Layout from '../layouts/Page.astro';
 import T from '../components/T.astro';
 import Quiz from '../components/Quiz.astro';
 import CtaSection from '../components/CtaSection.astro';
+import ExploreSection from '../components/ExploreSection.astro';
 
 const seo = {
 	title: 'Level check | Stein Tutoring',
@@ -14,10 +15,13 @@ const seo = {
 
 <Layout seo={seo}>
 	<Container>
-		<h1 class="page-title"><T en="Portuguese level check" pt="Teste de nível de inglês" /></h1>
-		<p><T en="Eight quick questions to estimate your level." pt="Oito perguntas rápidas para estimar seu nível." /></p>
-		<Quiz />
+		<div class="text-center section">
+			<h1 class="page-title"><T en="Portuguese level check" pt="Teste de nível de inglês" /></h1>
+			<p><T en="Eight quick questions to estimate your level." pt="Oito perguntas rápidas para estimar seu nível." /></p>
+			<Quiz />
+		</div>
 	</Container>
 
+	<ExploreSection exclude={['level-check']} />
 	<CtaSection />
 </Layout>
