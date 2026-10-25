@@ -153,7 +153,7 @@ const jsonLd = {
 						<h3><T en={p.name.en} pt={p.name.pt} /></h3>
 						<p class="price"><T en={p.price.en} pt={p.price.pt} /> <span><T en={p.unit.en} pt={p.unit.pt} /></span></p>
 						<p class="card__text"><T en={p.text.en} pt={p.text.pt} /></p>
-						<Button type="button" data-open-booking data-plan={p.plan} outlined={!p.featured} onPrimary={p.featured}>
+						<Button type="button" data-open-booking data-plan={p.plan} data-plan-pt={p.name.pt} outlined={!p.featured} onPrimary={p.featured}>
 							<T en="Ask about this" pt="Quero saber mais" />
 						</Button>
 					</article>

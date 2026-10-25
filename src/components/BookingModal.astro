@@ -23,6 +23,10 @@ const waPt = wa('Olá! Gostaria de agendar uma aula de inglês.');
 		</label>
 		<input type="hidden" name="plan" value="" />
 		<label>
+			<span><T en="Email or phone number" pt="E-mail ou telefone" /></span>
+			<input type="text" name="contact" required autocomplete="email" />
+		</label>
+		<label>
 			<span><T en="Message" pt="Mensagem" /></span>
 			<textarea name="message" rows="4" required></textarea>
 		</label>
@@ -50,6 +54,16 @@ const waPt = wa('Olá! Gostaria de agendar uma aula de inglês.');
 		if (opener) {
 			e.preventDefault();
 			form.elements.plan.value = opener.dataset.plan || '';
+			const pt = document.documentElement.getAttribute('data-lang') === 'pt';
+			const label = pt ? opener.dataset.planPt : opener.dataset.plan;
+			const msg = form.elements.message;
+			// Prefill, but never overwrite something the visitor typed.
+			if (!msg.value.trim() || msg.dataset.prefilled === 'true') {
+				msg.value = label
+					? pt ? `Tenho interesse em: ${label}.` : `I'm interested in: ${label}.`
+					: pt ? 'Tenho interesse em agendar uma aula.' : "I'm interested in booking a lesson.";
+				msg.dataset.prefilled = 'true';
+			}
 			form.removeAttribute('data-state');
 			dlg.showModal();
 			return;
@@ -61,16 +75,18 @@ const waPt = wa('Olá! Gostaria de agendar uma aula de inglês.');
 		e.preventDefault();
 		const data = new FormData(form);
 		if (data.get('_gotcha')) return;
+		// Formspree uses a field named "email" as the reply-to address.
+		if (String(data.get('contact')).includes('@')) data.append('email', String(data.get('contact')));
 		const endpoint = form.dataset.endpoint;
 		if (!endpoint) {
 			const pt = document.documentElement.getAttribute('data-lang') === 'pt';
-			const plan = data.get('plan');
 			const text = pt
-				? `Olá! Meu nome é ${data.get('name')}.${plan ? ` Plano: ${plan}.` : ''} ${data.get('message')}`
-				: `Hi! I'm ${data.get('name')}.${plan ? ` Plan: ${plan}.` : ''} ${data.get('message')}`;
+				? `Olá! Meu nome é ${data.get('name')} (${data.get('contact')}). ${data.get('message')}`
+				: `Hi! I'm ${data.get('name')} (${data.get('contact')}). ${data.get('message')}`;
 			window.open(`https://wa.me/${form.dataset.wa}?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
 			dlg.close();
 			form.reset();
+			delete form.elements.message.dataset.prefilled;
 			return;
 		}
 		try {
@@ -80,7 +96,10 @@ const waPt = wa('Olá! Gostaria de agendar uma aula de inglês.');
 				headers: { Accept: 'application/json' },
 			});
 			form.setAttribute('data-state', res.ok ? 'ok' : 'err');
-			if (res.ok) form.reset();
+			if (res.ok) {
+				form.reset();
+				delete form.elements.message.dataset.prefilled;
+			}
 		} catch (err) {
 			form.setAttribute('data-state', 'err');
 		}
