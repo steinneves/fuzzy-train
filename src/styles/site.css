@@ -456,31 +456,37 @@
 	padding: 1rem 0;
 	font-weight: 700;
 	list-style: none;
-	display: flex;
-	justify-content: space-between;
+	display: grid;
+	grid-template-columns: 1.5rem 1fr 1.5rem;
+	align-items: center;
 	gap: 1rem;
+	text-align: center;
 }
 .faq summary::-webkit-details-marker {
 	display: none;
 }
 .faq summary::before {
 	content: '';
-	width: 1.5rem;
 }
-.faq summary span {
-	flex: 1;
+.faq summary > span {
+	text-align: center;
 }
 .faq summary::after {
 	content: '+';
-	width: 1.5rem;
 	font-size: 1.5rem;
 	line-height: 1;
+	text-align: center;
 }
 .faq details[open] summary::after {
 	content: '–';
 }
+.faq details,
 .faq details p {
-	margin: 0 0 1rem;
+	text-align: center;
+}
+.faq details p {
+	max-width: 38rem;
+	margin: 0 auto 1rem;
 }
 
 /* Level check */
