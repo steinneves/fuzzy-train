@@ -8,12 +8,6 @@ const endpoint = settings.formEndpoint || '';
 const wa = (msg) => `https://wa.me/${settings.whatsapp}?text=${encodeURIComponent(msg)}`;
 const waEn = wa("Hi! I'd like to book a Portuguese lesson.");
 const waPt = wa('Olá! Gostaria de agendar uma aula de inglês.');
-const plans = [
-	{ value: 'Single lesson', en: 'Single lesson', pt: 'Aula avulsa' },
-	{ value: 'Lesson package', en: 'Lesson package', pt: 'Pacote de aulas' },
-	{ value: 'Custom package', en: 'Custom package', pt: 'Pacote personalizado' },
-	{ value: 'Not sure yet', en: 'Not sure yet', pt: 'Ainda não sei' },
-];
 ---
 
 <dialog id="booking" aria-labelledby="booking-title">
@@ -27,16 +21,7 @@ const plans = [
 			<span><T en="Name" pt="Nome" /></span>
 			<input type="text" name="name" required autocomplete="name" />
 		</label>
-		<label>
-			<span><T en="Your email" pt="Seu e-mail" /></span>
-			<input type="email" name="email" required={Boolean(endpoint)} autocomplete="email" />
-		</label>
-		<label>
-			<span><T en="Plan" pt="Plano" /></span>
-			<select name="plan">
-				{plans.map((p) => <option value={p.value} data-pt-text={p.pt}>{p.en}</option>)}
-			</select>
-		</label>
+		<input type="hidden" name="plan" value="" />
 		<label>
 			<span><T en="Message" pt="Mensagem" /></span>
 			<textarea name="message" rows="4" required></textarea>
@@ -64,8 +49,7 @@ const plans = [
 		const opener = e.target.closest('[data-open-booking]');
 		if (opener) {
 			e.preventDefault();
-			const plan = opener.dataset.plan;
-			if (plan && form.elements.plan) form.elements.plan.value = plan;
+			form.elements.plan.value = opener.dataset.plan || '';
 			form.removeAttribute('data-state');
 			dlg.showModal();
 			return;
@@ -80,9 +64,10 @@ const plans = [
 		const endpoint = form.dataset.endpoint;
 		if (!endpoint) {
 			const pt = document.documentElement.getAttribute('data-lang') === 'pt';
+			const plan = data.get('plan');
 			const text = pt
-				? `Olá! Meu nome é ${data.get('name')}. Plano: ${data.get('plan')}. ${data.get('message')}`
-				: `Hi! I'm ${data.get('name')}. Plan: ${data.get('plan')}. ${data.get('message')}`;
+				? `Olá! Meu nome é ${data.get('name')}.${plan ? ` Plano: ${plan}.` : ''} ${data.get('message')}`
+				: `Hi! I'm ${data.get('name')}.${plan ? ` Plan: ${plan}.` : ''} ${data.get('message')}`;
 			window.open(`https://wa.me/${form.dataset.wa}?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
 			dlg.close();
 			form.reset();
@@ -193,5 +178,9 @@ const plans = [
 	}
 	dialog > :global(.btn) {
 		width: 100%;
+		padding-block: 0.95rem;
+	}
+	form > :global(.btn) {
+		justify-self: center;
 	}
 </style>
