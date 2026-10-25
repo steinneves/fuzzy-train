@@ -23,16 +23,7 @@ jobs:
           node-version: lts/*
           cache: npm
       - run: npm ci
-      - name: Build
-        run: |
-          set +e
-          DEBUG="vite:*,astro:*" npx astro build --verbose > build.log 2>&1
-          code=$?
-          cat build.log
-          if [ $code -ne 0 ]; then
-            echo "::error title=Build failed::$(grep -n -E "src/|\.astro|\.mjs|\.ts|\.js" build.log | tail -n 40 | cut -c1-260 | sed 's/%/%25/g' | awk 'BEGIN{ORS="%0A"}1')"
-          fi
-          exit $code
+      - run: npm run build
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

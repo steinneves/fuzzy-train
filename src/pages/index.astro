@@ -1,81 +1,125 @@
 ---
 import { Icon } from 'astro-icon/components';
-import { Container, Button, FeatureCard, CtaCardSection, TextSection } from '@components/odyssey-theme';
+import { Container, Button } from '@components/odyssey-theme';
 import Layout from '../layouts/Page.astro';
 import settings from '../config/settings.js';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
-const waLink = `https://wa.me/${settings.whatsapp}?text=${encodeURIComponent(
-	"Hi! I'd like to book an English lesson."
-)}`;
-const mailLink = `mailto:${settings.email}?subject=${encodeURIComponent(
-	'English lessons'
-)}`;
+const wa = (msg) =>
+	`https://wa.me/${settings.whatsapp}?text=${encodeURIComponent(msg)}`;
+const waLink = wa("Hi! I'd like to book an English lesson.");
+const mailLink = `mailto:${settings.email}?subject=${encodeURIComponent('English lessons')}`;
+
+const chips = [
+	{ icon: 'mdi:account-voice', label: 'One-on-one' },
+	{ icon: 'mdi:clock-outline', label: 'R$80 / hour' },
+	{ icon: 'mdi:tune-variant', label: 'Custom packages' },
+];
 
 const packages = [
 	{
+		icon: 'mdi:clock-outline',
 		name: 'Single lesson',
 		price: 'R$80',
 		unit: 'per hour',
 		text: 'Try one hour with no commitment. A good way to meet, set a baseline and decide how to continue.',
 	},
 	{
+		icon: 'mdi:calendar-check-outline',
 		name: 'Lesson package',
 		price: 'R$80',
 		unit: 'per hour',
 		text: 'A block of hours with a steady weekly rhythm, so you build momentum and keep it.',
 	},
 	{
+		icon: 'mdi:tune-variant',
 		name: 'Custom package',
 		price: 'Tailored',
 		unit: 'built around you',
 		text: 'Job interviews, travel, exams, conversation or business English. Content and schedule designed for your goal.',
+		featured: true,
+		badge: 'Customizable',
 	},
-];
+].map((p) => ({ ...p, href: wa(`Hi! I'm interested in the ${p.name.toLowerCase()}.`) }));
 
 const steps = [
-	{ n: '1', title: 'Tell me your goal', text: 'Message me on WhatsApp or email with what you want to use English for.' },
-	{ n: '2', title: 'We build your plan', text: 'We agree on a package, schedule and focus areas that fit your needs.' },
-	{ n: '3', title: 'Learn and practice', text: 'One-on-one online lessons with practical material, feedback and steady progress.' },
+	{ icon: 'mdi:chat-processing-outline', title: 'Tell me your goal', text: 'Message me on WhatsApp or email with what you want to use English for.' },
+	{ icon: 'mdi:clipboard-text-outline', title: 'We build your plan', text: 'We agree on a package, schedule and focus areas that fit your needs.' },
+	{ icon: 'mdi:rocket-launch-outline', title: 'Learn and practice', text: 'One-on-one online lessons with practical material, feedback and steady progress.' },
 ];
+
+const jsonLd = {
+	'@context': 'https://schema.org',
+	'@type': 'Service',
+	name: 'ESL tutoring',
+	serviceType: 'English as a Second Language lessons',
+	provider: { '@type': 'Organization', name: settings.name, url: settings.url },
+	offers: {
+		'@type': 'Offer',
+		priceCurrency: 'BRL',
+		priceSpecification: {
+			'@type': 'UnitPriceSpecification',
+			price: 80,
+			priceCurrency: 'BRL',
+			unitText: 'HOUR',
+		},
+	},
+};
 ---
 
 <Layout>
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
+
 	<Container>
 		<section class="hero">
 			<div class="hero__text">
+				<p class="eyebrow">ESL tutoring</p>
 				<h1>English lessons built around you</h1>
 				<p>
 					One-on-one ESL tutoring with lesson packages designed for your
 					goals, schedule and level. R$80 per hour.
 				</p>
-				<div class="hero__btns">
+				<ul class="chips" aria-label="Highlights">
+					{chips.map((c) => (
+						<li class="chip"><Icon name={c.icon} width="18" height="18" /> {c.label}</li>
+					))}
+				</ul>
+				<div class="btn-row">
 					<Button href={waLink} newTab customIcon>
 						Message on WhatsApp
-						<Fragment slot="icon"><Icon name="ic:baseline-chevron-right" /></Fragment>
+						<Fragment slot="icon"><Icon name="mdi:whatsapp" width="20" height="20" /></Fragment>
 					</Button>
-					<Button href={mailLink} unelevated>Send an email</Button>
+					<Button href={mailLink} outlined>Send an email</Button>
 				</div>
 			</div>
 			<div class="hero__image">
 				<picture>
-					<img src={`${base}/assets/images/home/classic-hero.jpg`} alt="" />
+					<img
+						src={`${base}/assets/images/home/classic-hero.jpg`}
+						alt=""
+						width="1080"
+						height="1104"
+						fetchpriority="high"
+					/>
 				</picture>
 			</div>
 		</section>
 	</Container>
 
 	<Container>
-		<section id="packages" class="section">
+		<section id="packages" class="section reveal">
 			<h2>Lesson packages</h2>
 			<p>Every student is different, so every package can be adjusted.</p>
 			<div class="grid">
 				{packages.map((p) => (
-					<article class="card">
+					<article class:list={['card', { 'card--featured': p.featured }]}>
+						{p.badge && <span class="badge">{p.badge}</span>}
+						<span class="icon-circle"><Icon name={p.icon} width="24" height="24" /></span>
 						<h3>{p.name}</h3>
 						<p class="price">{p.price} <span>{p.unit}</span></p>
-						<p>{p.text}</p>
+						<p class="card__text">{p.text}</p>
+						<Button href={p.href} newTab outlined={!p.featured} onPrimary={p.featured}>Ask about this</Button>
 					</article>
 				))}
 			</div>
@@ -83,31 +127,65 @@ const steps = [
 	</Container>
 
 	<Container>
-		<section id="how-it-works" class="section">
+		<section id="how-it-works" class="section reveal">
 			<h2>How it works</h2>
-			<div class="grid">
-				{steps.map((s) => (
-					<article class="step">
-						<span class="step__n">{s.n}</span>
+			<ol class="grid steps">
+				{steps.map((s, i) => (
+					<li class="step">
+						<span class="step__n">{i + 1}</span>
+						<Icon name={s.icon} width="28" height="28" />
 						<h3>{s.title}</h3>
 						<p>{s.text}</p>
-					</article>
+					</li>
 				))}
+			</ol>
+		</section>
+	</Container>
+
+	<Container>
+		<section id="contact" class="section contact reveal">
+			<h2>Ready to start?</h2>
+			<p>Tell me what you want to achieve and I will suggest a plan.</p>
+			<div class="contact__grid">
+				<a class="contact__tile" href={waLink} target="_blank" rel="noopener noreferrer">
+					<Icon name="mdi:whatsapp" width="32" height="32" />
+					<span class="contact__label">WhatsApp</span>
+					<span class="contact__value">{settings.whatsappDisplay}</span>
+				</a>
+				<a class="contact__tile" href={mailLink}>
+					<Icon name="mdi:email-outline" width="32" height="32" />
+					<span class="contact__label">Email</span>
+					<span class="contact__value">{settings.email}</span>
+				</a>
 			</div>
 		</section>
 	</Container>
 
-	<div id="contact">
-		<CtaCardSection background="var(--theme-surface-2)" color="var(--theme-on-surface-2)">
-			<h2>Ready to start?</h2>
-			<p>Tell me what you want to achieve and I will suggest a plan.</p>
-			<div class="hero__btns cta__btns">
-				<Button href={waLink} newTab>WhatsApp: {settings.whatsappDisplay}</Button>
-				<Button href={mailLink} outlined>{settings.email}</Button>
-			</div>
-		</CtaCardSection>
-	</div>
+	<a class="fab" href={waLink} target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
+		<Icon name="mdi:whatsapp" width="28" height="28" />
+	</a>
 </Layout>
+
+<script>
+	document.documentElement.classList.add('js');
+	const els = document.querySelectorAll('.reveal');
+	const show = (el) => el.classList.add('is-visible');
+	if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+		const io = new IntersectionObserver(
+			(entries) =>
+				entries.forEach((e) => {
+					if (e.isIntersecting) {
+						show(e.target);
+						io.unobserve(e.target);
+					}
+				}),
+			{ threshold: 0.12 }
+		);
+		els.forEach((el) => io.observe(el));
+	} else {
+		els.forEach(show);
+	}
+</script>
 
 <style>
 	.hero {
@@ -122,39 +200,109 @@ const steps = [
 		justify-self: center;
 		max-width: 28rem;
 	}
-	.hero__btns {
+	.eyebrow {
+		margin: 0 0 0.5rem;
+		font-size: var(--font-size-sm);
+		font-weight: 700;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		opacity: 0.72;
+	}
+	.chips {
+		margin: 1.25rem 0;
+		padding: 0;
+		list-style: none;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+	}
+	.chip {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+		padding: 0.3rem 0.8rem;
+		border-radius: 3rem;
+		background-color: var(--theme-surface-2);
+		color: var(--theme-on-surface-2);
+		font-size: var(--font-size-sm);
+		font-weight: 700;
+	}
+	.btn-row {
 		display: flex;
 		flex-wrap: wrap;
 		align-items: center;
 		gap: 1rem;
 	}
 	.hero__image img {
+		display: block;
 		width: 100%;
-		height: 100%;
+		height: auto;
 		max-height: 70vh;
 		object-fit: cover;
 		border-radius: var(--theme-shape-radius);
 	}
 	.section {
 		margin: var(--section-margin) auto;
-		scroll-margin-top: 1rem;
 	}
 	.grid {
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
 		gap: var(--theme-grid-gap);
-		margin-top: 1.5rem;
+		margin: 1.5rem 0 0;
+		padding: 0;
+		list-style: none;
 	}
 	.card,
 	.step {
+		position: relative;
 		padding: 1.5rem;
 		background-color: var(--theme-surface-1);
 		color: var(--theme-on-surface-1);
 		border-radius: var(--theme-shape-radius);
+		transition: transform var(--theme-transition), box-shadow var(--theme-transition);
+	}
+	.card:hover,
+	.step:hover {
+		transform: translateY(-4px);
+		box-shadow: 0 10px 24px rgb(0 0 0 / 0.12);
+	}
+	.card {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
 	}
 	.card h3,
 	.step h3 {
-		margin-top: 0;
+		margin: 0.75rem 0 0;
+	}
+	.card__text {
+		flex: 1;
+		margin-bottom: 1.25rem;
+	}
+	.card--featured {
+		background-color: var(--theme-primary);
+		color: var(--theme-on-primary);
+	}
+	.badge {
+		position: absolute;
+		top: 1rem;
+		right: 1rem;
+		padding: 0.15rem 0.7rem;
+		border-radius: 3rem;
+		background-color: var(--theme-surface-2);
+		color: var(--theme-on-surface-2);
+		font-size: var(--font-size-sm);
+		font-weight: 700;
+	}
+	.icon-circle {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 3rem;
+		height: 3rem;
+		border-radius: 50%;
+		background-color: var(--theme-surface-2);
+		color: var(--theme-on-surface-2);
 	}
 	.price {
 		font-size: var(--font-size-lg);
@@ -167,28 +315,76 @@ const steps = [
 		opacity: 0.72;
 	}
 	.step__n {
+		position: absolute;
+		top: 1rem;
+		right: 1.25rem;
+		font-size: var(--font-size-xl);
+		font-weight: 700;
+		opacity: 0.18;
+		line-height: 1;
+	}
+	.contact__grid {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: var(--theme-grid-gap);
+		margin-top: 1.5rem;
+	}
+	.contact__tile {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 0.25rem;
+		padding: 1.5rem;
+		background-color: var(--theme-surface-2);
+		color: var(--theme-on-surface-2);
+		border-radius: var(--theme-shape-radius);
+		text-decoration: none;
+		transition: transform var(--theme-transition), box-shadow var(--theme-transition);
+		overflow-wrap: anywhere;
+	}
+	.contact__tile:hover {
+		transform: translateY(-4px);
+		box-shadow: 0 10px 24px rgb(0 0 0 / 0.12);
+	}
+	.contact__label {
+		font-weight: 700;
+		margin-top: 0.5rem;
+	}
+	.contact__value {
+		font-size: var(--font-size-md);
+	}
+	.fab {
+		position: fixed;
+		right: 1rem;
+		bottom: 1rem;
+		z-index: 80;
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-		width: 2rem;
-		height: 2rem;
-		margin-bottom: 0.75rem;
+		width: 3.5rem;
+		height: 3.5rem;
 		border-radius: 50%;
 		background-color: var(--theme-primary);
 		color: var(--theme-on-primary);
-		font-weight: 700;
+		box-shadow: 0 6px 18px rgb(0 0 0 / 0.3);
+		transition: transform var(--theme-transition);
 	}
-	#contact {
-		scroll-margin-top: 1rem;
+	.fab:hover {
+		transform: scale(1.08);
 	}
-	.cta__btns {
-		justify-content: center;
+	:global(.js) .reveal:not(.is-visible) {
+		opacity: 0;
+		transform: translateY(1.5rem);
+	}
+	.reveal {
+		transition: opacity 0.6s ease, transform 0.6s ease;
 	}
 	@media (max-width: 768px) {
 		.hero {
 			grid-template-columns: 1fr;
 		}
-		.grid {
+		.grid,
+		.contact__grid {
 			grid-template-columns: 1fr;
 		}
 	}
