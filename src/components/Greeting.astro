@@ -1,31 +1,15 @@
 ---
-import { Icon } from 'astro-icon/components';
-// Decorative greeting that swaps between languages, like a "hello" boot screen.
-// Letters spring in one by one, an underline draws under the word, and a hand waves.
-const words = [
-	{ text: 'Hello', delay: '0s' },
-	{ text: 'Olá', delay: '3s' },
-];
+// Decorative greeting that cross-fades between languages, like a "hello" boot screen.
 ---
 
 <p class="greeting" aria-hidden="true">
-	{words.map((w) => (
-		<span class="greeting__word" style={`--word-delay:${w.delay}`}>
-			{[...w.text].map((ch, i) => (
-				<span class="l" style={`--i:${i}`}>{ch}</span>
-			))}
-		</span>
-	))}
-	<span class="greeting__hand"><Icon name="mdi:hand-wave" width="1em" height="1em" /></span>
+	<span class="greeting__word">Hello</span>
+	<span class="greeting__word greeting__word--b">Olá</span>
 </p>
 
 <style>
 	.greeting {
 		display: grid;
-		grid-template-columns: auto auto;
-		justify-content: start;
-		align-items: end;
-		column-gap: 0.35em;
 		margin: 0 0 0.35rem;
 		font-family: var(--theme-font-family-serif);
 		font-style: italic;
@@ -36,127 +20,41 @@ const words = [
 	}
 	.greeting__word {
 		grid-area: 1 / 1;
-		position: relative;
-		display: inline-flex;
-		padding-right: 0.1em;
-	}
-	.greeting__word::after {
-		content: '';
-		position: absolute;
-		left: 0;
-		right: 0.1em;
-		bottom: -0.08em;
-		height: 3px;
-		border-radius: 3px;
-		background: currentColor;
-		transform: scaleX(0);
-		transform-origin: 0% 50%;
-		animation: underline 6s ease-in-out infinite both;
-		animation-delay: var(--word-delay);
-	}
-	.l {
-		display: inline-block;
-		white-space: pre;
 		opacity: 0;
-		animation: letter 6s infinite both;
-		animation-delay: calc(var(--word-delay) + var(--i) * 0.07s);
+		animation: greet 6s ease-in-out infinite both;
 	}
-	.greeting__hand {
-		grid-area: 1 / 2;
-		display: inline-block;
-		line-height: 1;
-		transform-origin: 70% 80%;
-		animation: wave 3s ease-in-out infinite;
+	.greeting__word--b {
+		animation-delay: 3s;
 	}
-	@keyframes letter {
+	@keyframes greet {
 		0% {
 			opacity: 0;
-			filter: blur(8px);
-			transform: translateY(0.6em) rotate(10deg) scale(0.7);
-			animation-timing-function: cubic-bezier(0.34, 1.7, 0.64, 1);
+			filter: blur(10px);
+			transform: translateY(8px) scale(0.96);
 		}
-		9% {
+		10%,
+		42% {
 			opacity: 1;
 			filter: blur(0);
 			transform: none;
 		}
-		40% {
-			opacity: 1;
-			filter: blur(0);
-			transform: none;
-			animation-timing-function: ease-in;
-		}
-		50%,
-		100% {
-			opacity: 0;
-			filter: blur(8px);
-			transform: translateY(-0.5em) rotate(-8deg) scale(1.1);
-		}
-	}
-	@keyframes underline {
-		0%,
-		8% {
-			transform: scaleX(0);
-			transform-origin: 0% 50%;
-		}
-		22%,
-		40% {
-			transform: scaleX(1);
-			transform-origin: 0% 50%;
-		}
-		41% {
-			transform: scaleX(1);
-			transform-origin: 100% 50%;
-		}
-		50%,
-		100% {
-			transform: scaleX(0);
-			transform-origin: 100% 50%;
-		}
-	}
-	@keyframes wave {
-		0%,
-		8%,
 		52%,
 		100% {
-			transform: rotate(0);
-		}
-		14% {
-			transform: rotate(16deg);
-		}
-		20% {
-			transform: rotate(-10deg);
-		}
-		26% {
-			transform: rotate(14deg);
-		}
-		32% {
-			transform: rotate(-8deg);
-		}
-		38% {
-			transform: rotate(10deg);
-		}
-		45% {
-			transform: rotate(0);
+			opacity: 0;
+			filter: blur(10px);
+			transform: translateY(-8px) scale(1.04);
 		}
 	}
 	@media (prefers-reduced-motion: reduce) {
 		.greeting {
-			grid-template-columns: none;
 			display: flex;
 			gap: 0.75rem;
 		}
-		.greeting__word::after {
-			display: none;
-		}
-		.l {
+		.greeting__word {
 			animation: none;
 			opacity: 1;
 		}
-		.greeting__hand {
-			display: none;
-		}
-		.greeting__word + .greeting__word::before {
+		.greeting__word--b::before {
 			content: '·';
 			margin-right: 0.75rem;
 			opacity: 0.5;
