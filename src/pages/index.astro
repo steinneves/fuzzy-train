@@ -8,8 +8,8 @@ import settings from '../config/settings.js';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 const wa = (msg) => `https://wa.me/${settings.whatsapp}?text=${encodeURIComponent(msg)}`;
-const waEn = wa("Hi! I'd like to book a Portuguese lesson.");
-const waPt = wa('Olá! Gostaria de agendar uma aula de inglês.');
+const waEn = wa("Hi! I'd like to book a trial Portuguese lesson.");
+const waPt = wa('Olá! Gostaria de agendar uma aula experimental de inglês.');
 
 const usd = `US$${settings.priceUsd}`;
 const brl = `R$${settings.priceBrl}`;

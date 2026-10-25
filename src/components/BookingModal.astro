@@ -6,8 +6,8 @@ import settings from '../config/settings.js';
 
 const endpoint = settings.formEndpoint || '';
 const wa = (msg) => `https://wa.me/${settings.whatsapp}?text=${encodeURIComponent(msg)}`;
-const waEn = wa("Hi! I'd like to book a Portuguese lesson.");
-const waPt = wa('Olá! Gostaria de agendar uma aula de inglês.');
+const waEn = wa("Hi! I'd like to book a trial Portuguese lesson.");
+const waPt = wa('Olá! Gostaria de agendar uma aula experimental de inglês.');
 ---
 
 <dialog id="booking" aria-labelledby="booking-title">
@@ -61,7 +61,7 @@ const waPt = wa('Olá! Gostaria de agendar uma aula de inglês.');
 			if (!msg.value.trim() || msg.dataset.prefilled === 'true') {
 				msg.value = label
 					? pt ? `Tenho interesse em: ${label}.` : `I'm interested in: ${label}.`
-					: pt ? 'Tenho interesse em agendar uma aula.' : "I'm interested in booking a lesson.";
+					: pt ? 'Tenho interesse em agendar uma aula experimental.' : "I'm interested in booking a trial lesson.";
 				msg.dataset.prefilled = 'true';
 			}
 			form.removeAttribute('data-state');
