@@ -24,6 +24,12 @@
 	padding: 0;
 	list-style: none;
 }
+.grid--2 {
+	grid-template-columns: repeat(2, 1fr);
+	max-width: 52rem;
+	margin-left: auto;
+	margin-right: auto;
+}
 .card,
 .step {
 	position: relative;

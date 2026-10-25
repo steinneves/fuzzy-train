@@ -41,19 +41,8 @@ const packages = [
 		price: { en: usd, pt: brl },
 		unit: { en: 'per hour', pt: 'por hora' },
 		text: {
-			en: 'A block of hours with a steady weekly rhythm, so you build momentum and keep it.',
-			pt: 'Um bloco de horas com ritmo semanal constante, para você ganhar embalo e manter.',
-		},
-	},
-	{
-		icon: 'mdi:tune-variant',
-		plan: 'Custom package',
-		name: { en: 'Custom package', pt: 'Pacote personalizado' },
-		price: { en: 'Tailored', pt: 'Sob medida' },
-		unit: { en: 'built around you', pt: 'feito para você' },
-		text: {
-			en: 'Travel, moving to Brazil, work, conversation or exam prep. Content and schedule designed for your goal.',
-			pt: 'Entrevistas de emprego, viagens, provas, conversação ou inglês para negócios. Conteúdo e horários planejados para o seu objetivo.',
+			en: 'A block of hours with a steady weekly rhythm, tailored to your goal: travel, work, conversation or exam prep.',
+			pt: 'Um bloco de horas com ritmo semanal constante, sob medida para o seu objetivo: viagens, trabalho, conversação ou provas.',
 		},
 		featured: true,
 		badge: { en: 'Customizable', pt: 'Personalizável' },
@@ -167,7 +156,7 @@ const jsonLd = {
 		<section id="packages" class="section reveal">
 			<h2 class="section-title"><T en="Lesson packages" pt="Pacotes de aulas" /></h2>
 			<p class="section-intro"><T en="Every student is different, so every package can be adjusted." pt="Cada aluno é diferente, então todo pacote pode ser ajustado." /></p>
-			<div class="grid">
+			<div class="grid grid--2">
 				{packages.map((p) => (
 					<article class:list={['card', { 'card--featured': p.featured }]}>
 						{p.badge && <span class="badge"><T en={p.badge.en} pt={p.badge.pt} /></span>}
