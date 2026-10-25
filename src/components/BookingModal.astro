@@ -71,6 +71,9 @@ const waPt = wa('Olá! Gostaria de agendar uma aula de inglês.');
 		if (e.target.closest('[data-close-booking]') || e.target === dlg) dlg.close();
 	});
 
+	// Once the visitor edits the message, stop treating it as an auto-filled default.
+	form.elements.message.addEventListener('input', () => delete form.elements.message.dataset.prefilled);
+
 	form.addEventListener('submit', async (e) => {
 		e.preventDefault();
 		const data = new FormData(form);
