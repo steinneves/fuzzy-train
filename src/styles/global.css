@@ -59,3 +59,14 @@ html:not([data-lang='pt']) [data-t='pt'] {
 		animation-duration: 0.01ms !important;
 	}
 }
+
+/* WhatsApp-branded buttons */
+a.btn[data-wa] {
+	background-color: #25d366;
+	border-color: #25d366;
+	color: #000;
+}
+a.btn[data-wa]:hover {
+	background-color: #1ebe5b;
+	border-color: #1ebe5b;
+}

@@ -122,7 +122,7 @@ const jsonLd = {
 				</ul>
 				<div class="btn-row">
 					<Button type="button" data-open-booking><T en="Book a lesson" pt="Agendar aula" /></Button>
-					<Button href={waEn} data-pt-href={waPt} newTab outlined customIcon>
+					<Button href={waEn} data-pt-href={waPt} data-wa newTab customIcon>
 						<T en="Message on WhatsApp" pt="Chamar no WhatsApp" />
 						<Fragment slot="icon"><Icon name="mdi:whatsapp" width="20" height="20" /></Fragment>
 					</Button>
@@ -214,7 +214,7 @@ const jsonLd = {
 			<h2><T en="Ready to start?" pt="Pronto para começar?" /></h2>
 			<p><T en="Tell me what you want to achieve and I will suggest a plan." pt="Conte o que você quer alcançar e eu sugiro um plano." /></p>
 			<div class="contact__grid">
-				<a class="contact__tile" href={waEn} data-pt-href={waPt} target="_blank" rel="noopener noreferrer">
+				<a class="contact__tile contact__tile--wa" href={waEn} data-pt-href={waPt} target="_blank" rel="noopener noreferrer">
 					<Icon name="mdi:whatsapp" width="32" height="32" />
 					<span class="contact__label">WhatsApp</span>
 					<span class="contact__value">{settings.whatsappDisplay}</span>
@@ -459,6 +459,10 @@ const jsonLd = {
 		font-size: var(--font-size-sm);
 		opacity: 0.72;
 	}
+	.contact__tile--wa {
+		background-color: #25d366;
+		color: #000;
+	}
 	.fab {
 		position: fixed;
 		right: 1rem;
@@ -470,8 +474,8 @@ const jsonLd = {
 		width: 3.5rem;
 		height: 3.5rem;
 		border-radius: 50%;
-		background-color: var(--theme-primary);
-		color: var(--theme-on-primary);
+		background-color: #25d366;
+		color: #000;
 		box-shadow: 0 6px 18px rgb(0 0 0 / 0.3);
 		transition: transform var(--theme-transition);
 	}

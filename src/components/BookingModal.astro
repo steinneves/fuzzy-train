@@ -1,9 +1,13 @@
 ---
+import { Icon } from 'astro-icon/components';
 import { Button } from '@components/odyssey-theme';
 import T from './T.astro';
 import settings from '../config/settings.js';
 
 const endpoint = settings.formEndpoint || '';
+const wa = (msg) => `https://wa.me/${settings.whatsapp}?text=${encodeURIComponent(msg)}`;
+const waEn = wa("Hi! I'd like to book an English lesson.");
+const waPt = wa('Olá! Gostaria de agendar uma aula de inglês.');
 const plans = [
 	{ value: 'Single lesson', en: 'Single lesson', pt: 'Aula avulsa' },
 	{ value: 'Lesson package', en: 'Lesson package', pt: 'Pacote de aulas' },
@@ -23,12 +27,10 @@ const plans = [
 			<span><T en="Name" pt="Nome" /></span>
 			<input type="text" name="name" required autocomplete="name" />
 		</label>
-		{endpoint && (
-			<label>
-				<span><T en="Email" pt="E-mail" /></span>
-				<input type="email" name="email" required autocomplete="email" />
-			</label>
-		)}
+		<label>
+			<span><T en="Your email" pt="Seu e-mail" /></span>
+			<input type="email" name="email" required={Boolean(endpoint)} autocomplete="email" />
+		</label>
 		<label>
 			<span><T en="Plan" pt="Plano" /></span>
 			<select name="plan">
@@ -39,16 +41,19 @@ const plans = [
 			<span><T en="Message" pt="Mensagem" /></span>
 			<textarea name="message" rows="4" required></textarea>
 		</label>
-		<Button type="submit">
-			{endpoint
-				? <T en="Send message" pt="Enviar mensagem" />
-				: <T en="Continue on WhatsApp" pt="Continuar no WhatsApp" />}
-		</Button>
+		<Button type="submit"><T en="Send message" pt="Enviar mensagem" /></Button>
 		<p class="status" role="status" aria-live="polite">
 			<span data-s="ok"><T en="Thanks! I will get back to you soon." pt="Obrigado! Responderei em breve." /></span>
 			<span data-s="err"><T en="Something went wrong. Please try WhatsApp instead." pt="Algo deu errado. Tente pelo WhatsApp." /></span>
 		</p>
 	</form>
+
+	<div class="booking__or" aria-hidden="true"><span><T en="or" pt="ou" /></span></div>
+
+	<Button href={waEn} data-pt-href={waPt} data-wa newTab customIcon>
+		<T en="Message me on WhatsApp" pt="Chamar no WhatsApp" />
+		<Fragment slot="icon"><Icon name="mdi:whatsapp" width="22" height="22" /></Fragment>
+	</Button>
 </dialog>
 
 <script>
@@ -169,5 +174,24 @@ const plans = [
 	.status {
 		margin: 0;
 		min-height: 1.5rem;
+	}
+	.booking__or {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		margin: 0.5rem 0 1rem;
+		font-size: var(--font-size-sm);
+		opacity: 0.72;
+	}
+	.booking__or::before,
+	.booking__or::after {
+		content: '';
+		flex: 1;
+		height: 1px;
+		background: currentColor;
+		opacity: 0.4;
+	}
+	dialog > :global(.btn) {
+		width: 100%;
 	}
 </style>
