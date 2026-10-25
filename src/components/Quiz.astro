@@ -13,6 +13,27 @@ import quiz from '../config/quiz.js';
 	const getLang = () => (document.documentElement.getAttribute('data-lang') === 'pt' ? 'pt' : 'en');
 	let lang = getLang();
 	let state = { i: 0, score: 0 };
+	let locked = false;
+
+	// The progress elements persist between questions so the bar can animate smoothly.
+	const progress = document.createElement('p');
+	progress.className = 'quiz__progress';
+	const bar = document.createElement('div');
+	bar.className = 'quiz__bar';
+	const fill = document.createElement('span');
+	bar.append(fill);
+	const main = document.createElement('div');
+	main.className = 'quiz__main';
+	body.append(progress, bar, main);
+
+	function setBar(pct, animate = true) {
+		if (!animate) fill.style.transition = 'none';
+		fill.style.width = `${pct}%`;
+		if (!animate) {
+			void fill.offsetWidth; // flush so the next change animates again
+			fill.style.transition = '';
+		}
+	}
 
 	function el(tag, cls, text) {
 		const e = document.createElement(tag);
@@ -24,13 +45,14 @@ import quiz from '../config/quiz.js';
 	function render() {
 		const d = data[lang];
 		const n = d.questions.length;
-		body.replaceChildren();
+		main.replaceChildren();
+		body.classList.toggle('quiz--done', state.i >= n);
 
 		if (state.i >= n) {
 			const level = d.levels.find((l) => state.score <= l.max) || d.levels[d.levels.length - 1];
 			const wrap = el('div', 'quiz__result');
 			wrap.append(
-				el('p', 'quiz__progress', d.ui.title),
+				el('p', 'quiz__label', d.ui.title),
 				el('p', 'quiz__name', level.name),
 				el('p', '', level.desc),
 				el('p', 'quiz__note', d.ui.score.replace('{s}', state.score).replace('{n}', n)),
@@ -48,36 +70,41 @@ import quiz from '../config/quiz.js';
 			again.addEventListener('click', reset);
 			actions.append(book, again);
 			wrap.append(actions);
-			body.append(wrap);
+			main.append(wrap);
 			return;
 		}
 
 		const q = d.questions[state.i];
-		const bar = el('div', 'quiz__bar');
-		const fill = el('span');
-		fill.style.width = `${(state.i / n) * 100}%`;
-		bar.append(fill);
+		progress.textContent = d.ui.question.replace('{i}', state.i + 1).replace('{n}', n);
 		const options = el('div', 'quiz__options');
 		q.options.forEach((text, idx) => {
 			const b = el('button', 'quiz__opt', text);
 			b.type = 'button';
 			b.addEventListener('click', () => {
+				if (locked) return;
 				if (idx === q.answer) state.score++;
 				state.i++;
-				render();
+				setBar((state.i / n) * 100);
+				if (state.i >= n) {
+					// let the bar finish filling before showing the result
+					locked = true;
+					setTimeout(() => {
+						locked = false;
+						render();
+					}, 550);
+				} else {
+					render();
+				}
 			});
 			options.append(b);
 		});
-		body.append(
-			el('p', 'quiz__progress', d.ui.question.replace('{i}', state.i + 1).replace('{n}', n)),
-			bar,
-			el('h2', 'quiz__q', q.q),
-			options
-		);
+		main.append(el('h2', 'quiz__q', q.q), options);
 	}
 
 	function reset() {
 		state = { i: 0, score: 0 };
+		locked = false;
+		setBar(0, false);
 		render();
 	}
 
@@ -88,5 +115,6 @@ import quiz from '../config/quiz.js';
 			reset();
 		}
 	});
+	setBar(0, false);
 	render();
 </script>

@@ -6,6 +6,7 @@ import T from '../components/T.astro';
 import CtaSection from '../components/CtaSection.astro';
 import Testimonials from '../components/Testimonials.astro';
 import ExploreSection from '../components/ExploreSection.astro';
+import Greeting from '../components/Greeting.astro';
 import settings from '../config/settings.js';
 import { waEn, waPt } from '../config/links.js';
 
@@ -107,6 +108,7 @@ const jsonLd = {
 	<Container>
 		<section class="hero">
 			<div class="hero__text">
+				<Greeting />
 				<p class="eyebrow"><T en="Portuguese tutoring" pt="Aulas de inglês" /></p>
 				<h1><T en="Portuguese lessons built around you" pt="Aulas de inglês feitas sob medida para você" /></h1>
 				<p>

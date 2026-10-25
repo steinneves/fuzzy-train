@@ -517,7 +517,8 @@
 	color: var(--theme-on-surface-1);
 	border-radius: var(--theme-shape-radius);
 }
-.quiz__progress {
+.quiz__progress,
+.quiz__label {
 	margin: 0 0 0.5rem;
 	font-size: var(--font-size-sm);
 	font-weight: 700;
@@ -532,9 +533,33 @@
 }
 .quiz__bar span {
 	display: block;
+	width: 0;
 	height: 100%;
+	border-radius: 1rem;
 	background: var(--theme-primary);
-	transition: width 0.3s ease;
+	transition: width 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.quiz--done .quiz__progress,
+.quiz--done .quiz__bar {
+	display: none;
+}
+.quiz__main > * {
+	animation: quiz-in 0.35s ease both;
+}
+@keyframes quiz-in {
+	from {
+		opacity: 0;
+		transform: translateY(8px);
+	}
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+@media (prefers-reduced-motion: reduce) {
+	.quiz__main > * {
+		animation: none;
+	}
 }
 .quiz__q {
 	margin: 0 0 1.25rem;
